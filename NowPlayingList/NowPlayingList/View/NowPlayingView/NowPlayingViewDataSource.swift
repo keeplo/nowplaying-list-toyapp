@@ -82,7 +82,9 @@ extension NowPlayingViewDataSource: UICollectionViewDataSource {
                     let image = UIImage(data: Data(imageData)) {
                     ImageCacheManager.shared.setObject(image, forKey: nsPath)
                     DispatchQueue.main.async {
-                        cell.configureImage(image)
+                        if indexPath == collectionView.indexPath(for: cell) {
+                            cell.configureImage(image)
+                        }
                     }
                 }
             }

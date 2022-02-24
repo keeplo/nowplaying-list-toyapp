@@ -45,6 +45,15 @@ final class NowPlayingViewCell: UICollectionViewCell {
         setUpCellLayout()
     }
     
+    override func prepareForReuse() {
+        movieThumbnailImageView.image = nil
+        movieTitleLabel.text = ""
+        movieRatedLabel.text = ""
+    }
+}
+
+// MARK: -- Custom Methods
+extension NowPlayingViewCell {
     func setUpCellLayout() {
         cellStackView.addArrangedSubview(movieThumbnailImageView)
         cellStackView.addArrangedSubview(movieTitleLabel)
