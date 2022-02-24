@@ -23,14 +23,14 @@ enum NowPlayingListAPI {
     private static let host = "api.themoviedb.org"
     private static let appID = NowPlayingListAPI.apiKey
 
-    case nowplaying
-    case searching(String)
+    case nowplaying(Int)
+    case searching(String, Int)
     
     private var path: String {
         switch self {
         case .nowplaying:
             return "/3/movie/now_playing"
-        case .searching(_):
+        case .searching(_, _):
             return "/3/search/movie"
         }
     }
@@ -38,17 +38,19 @@ enum NowPlayingListAPI {
     private var keys: [String] {
         switch self {
         case .nowplaying:
-            return ["api_key", "language", "page"]
-        case .searching(_):
-            return ["query", "api_key", "language", "page"]
+            return ["page", "api_key", "language"]
+        case .searching(_, _):
+            return ["query", "page", "api_key", "language"]
         }
     }
     
     private var values: [String] {
         var parameters: [String]
         switch self {
-        case .searching(let query):
-            parameters = [query]
+        case .nowplaying(let page):
+            parameters = [String(page)]
+        case .searching(let query, let page):
+            parameters = [query, String(page)]
         default:
             parameters = []
         }

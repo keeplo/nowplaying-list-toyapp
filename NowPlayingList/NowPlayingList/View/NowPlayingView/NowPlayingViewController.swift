@@ -47,21 +47,3 @@ class NowPlayingViewController: UIViewController {
     }
 }
 
-extension NowPlayingViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = collectionView.frame.width
-        let itemPerRow: CGFloat = 2
-        let itemRate:CGFloat = 2/3
-        let padding: CGFloat = 20
-        
-        let cellWidth = (width - padding * 2) / itemPerRow
-        let cellHeight = (cellWidth / itemRate) + padding + padding
-                
-        return CGSize(width: cellWidth, height: cellHeight)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-    }
-}
-

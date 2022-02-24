@@ -8,7 +8,7 @@
 import Foundation
 
 struct NowPlayingListNetworkManager: NetworkManager {
-    func loadNowPlayingList(url: URL, _ completion: @escaping ([Movie]) -> Void) {
+    func loadNowPlayingList(url: URL, _ completion: @escaping (Page) -> Void) {
         requestData(with: url) { result in
             switch result {
             case .success(let data):
@@ -16,7 +16,7 @@ struct NowPlayingListNetworkManager: NetworkManager {
                     let page = try decoder.decode(Page.self, from: data)
                     
                     DispatchQueue.main.async {
-                        completion(page.results)
+                        completion(page)
                     }
                 } catch {
                     NSLog("\(#function) - \(error.localizedDescription)")

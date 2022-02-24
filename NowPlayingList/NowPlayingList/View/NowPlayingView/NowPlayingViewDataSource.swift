@@ -10,6 +10,7 @@ import UIKit
 
 protocol NowPlayingViewModel {
     func loadNowPlayingList()
+    func refreshCollectionView()
 }
 
 class NowPlayingViewDataSource: NSObject {
@@ -18,6 +19,16 @@ class NowPlayingViewDataSource: NSObject {
     private var changedListCompletion: ChangedListCompletion?
     
     private let networkManager: NowPlayingListNetworkManager
+    private var lastPage: Int = 1 {
+        didSet {
+            print("changed lasgPage \(lastPage)")
+        }
+    }
+    private var totalPage: Int = 0 {
+        didSet {
+            print("changed totalPage \(totalPage)")
+        }
+    }
     private var movies: [Movie] = [] {
         didSet {
             changedListCompletion?()
@@ -32,20 +43,21 @@ class NowPlayingViewDataSource: NSObject {
 
 extension NowPlayingViewDataSource: NowPlayingViewModel {
     func loadNowPlayingList() {
-        guard let url = NowPlayingListAPI.nowplaying.makeURL() else {
+        guard let url = NowPlayingListAPI.nowplaying(lastPage).makeURL() else {
             NSLog("\(#function) - URL 생성 실패")
             return
         }
         print(#function)
-        networkManager.loadNowPlayingList(url: url) { pageResults in
-            self.movies.append(contentsOf: pageResults)
+        networkManager.loadNowPlayingList(url: url) { page in
+            self.movies.append(contentsOf: page.results)
+            self.lastPage = page.page
+            self.totalPage = page.totalPages
         }
     }
 }
 
 extension NowPlayingViewDataSource: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(#function)
         return movies.count
     }
     
@@ -77,5 +89,32 @@ extension NowPlayingViewDataSource: UICollectionViewDataSource {
         }
         
         return cell
+    }
+}
+
+extension NowPlayingViewDataSource: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if lastPage < totalPage, indexPath.item == (movies.count / 4) {
+            lastPage += 1
+            loadNowPlayingList()
+        }
+    }
+}
+
+extension NowPlayingViewDataSource: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = UIScreen.main.bounds.width
+        let itemPerRow: CGFloat = 2
+        let itemRate:CGFloat = 2/3
+        let padding: CGFloat = 20
+        
+        let cellWidth = (width - padding * 2) / itemPerRow
+        let cellHeight = (cellWidth / itemRate) + padding + padding
+                
+        return CGSize(width: cellWidth, height: cellHeight)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     }
 }
