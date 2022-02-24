@@ -55,17 +55,23 @@ extension NowPlayingViewDataSource: UICollectionViewDataSource {
         }
         
         let movie = movies[indexPath.row]
+        let nsPath = NSString(string: movie.posterPath)
         cell.configureData(title: movie.title, rated: movie.rated)
         
-        DispatchQueue.global().async {
-            guard let imageURL = NowPlayingListAPI.makeImageURL(movie.posterPath) else {
-                NSLog("\(#function) - 포스터 URL 생성 실패")
-                return
-            }
-            if let imageData = NSData(contentsOf: imageURL),
-                let image = UIImage(data: Data(imageData)) {
-                DispatchQueue.main.async {
-                    cell.configureImage(image)
+        if let cachedImage = ImageCacheManager.shared.object(forKey: nsPath) {
+            cell.configureImage(cachedImage)
+        } else {
+            DispatchQueue.global().async {
+                guard let imageURL = NowPlayingListAPI.makeImageURL(movie.posterPath) else {
+                    NSLog("\(#function) - 포스터 URL 생성 실패")
+                    return
+                }
+                if let imageData = NSData(contentsOf: imageURL),
+                    let image = UIImage(data: Data(imageData)) {
+                    ImageCacheManager.shared.setObject(image, forKey: nsPath)
+                    DispatchQueue.main.async {
+                        cell.configureImage(image)
+                    }
                 }
             }
         }
