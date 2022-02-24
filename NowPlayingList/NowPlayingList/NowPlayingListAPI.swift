@@ -60,6 +60,11 @@ enum NowPlayingListAPI {
 
 // MARK: -- Method
 extension NowPlayingListAPI {
+    static func makeImageURL(_ filePath: String) -> URL? {
+        let baseURL = "https://image.tmdb.org/t/p/w500/"
+        return URL(string: baseURL + filePath)
+    }
+    
     func makeURL() -> URL? {
         var components = URLComponents()
         components.scheme = NowPlayingListAPI.scheme
