@@ -24,9 +24,10 @@ class NowPlayingViewController: UIViewController {
             }
         }
         collectionView.dataSource = viewDataSource
-        collectionView.delegate = self
+        collectionView.delegate = viewDataSource
         
-        self.navigationItem.title = "현재 상영 중"
+        
+        self.navigationController?.navigationBar.topItem?.title = "현재 상영 중"
     }
      
     override func viewWillAppear(_ animated: Bool) {
