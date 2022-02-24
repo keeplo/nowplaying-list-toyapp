@@ -21,7 +21,6 @@ class NowPlayingViewController: UIViewController {
         viewDataSource = NowPlayingViewDataSource(networkManager: NowPlayingListNetworkManager()) {
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
-                print("reload")
             }
         }
         collectionView.dataSource = viewDataSource
@@ -54,10 +53,14 @@ extension NowPlayingViewController: UICollectionViewDelegateFlowLayout {
         let itemRate:CGFloat = 2/3
         let padding: CGFloat = 20
         
-        let cellWidth = (width - padding) / itemPerRow
+        let cellWidth = (width - padding * 2) / itemPerRow
         let cellHeight = (cellWidth / itemRate) + padding + padding
                 
         return CGSize(width: cellWidth, height: cellHeight)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     }
 }
 

@@ -11,7 +11,6 @@ final class NowPlayingViewCell: UICollectionViewCell {
     var movieThumbnailImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.backgroundColor = .red
         return imageView
     }()
     var movieTitleLabel: UILabel = {
