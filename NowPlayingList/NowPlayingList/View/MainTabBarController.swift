@@ -18,22 +18,21 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let nowPlayingTab = NowPlayingViewController()
+        let nowPlayingVC = NowPlayingViewController()
+        let nowPlayingTab = UINavigationController(rootViewController: nowPlayingVC)
         let nowPlayingTabBarItem = UITabBarItem(title: "홈", image: UIImage(systemName: "1.circle.fill"), tag: 1)
         nowPlayingTab.tabBarItem = nowPlayingTabBarItem
         
-        let searchPageTab = SearchingMovieVIewController()
-        let searchPageTabBarItem = UITabBarItem(title: "검색", image: UIImage(systemName: "2.circle.fill"), tag: 2)
-        searchPageTab.tabBarItem = searchPageTabBarItem
+        let searchingVC = SearchingMovieVIewController()
+        let searchingTab = UINavigationController(rootViewController: searchingVC)
+        let searchingTabBarItem = UITabBarItem(title: "검색", image: UIImage(systemName: "2.circle.fill"), tag: 2)
+        searchingTab.tabBarItem = searchingTabBarItem
         
-        let genrePageTab = SortingGenreViewController()
-        let genrePageTabBarItem = UITabBarItem(title: "장르", image: UIImage(systemName: "3.circle.fill"), tag: 3)
-        genrePageTab.tabBarItem = genrePageTabBarItem
+        let sortingVC = SortingGenreViewController()
+        let sortingTab = UINavigationController(rootViewController: sortingVC)
+        let sortingTabBarItem = UITabBarItem(title: "장르", image: UIImage(systemName: "3.circle.fill"), tag: 3)
+        sortingTab.tabBarItem = sortingTabBarItem
         
-        self.viewControllers = [nowPlayingTab, searchPageTab, genrePageTab]
-    }
-    
-    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
-        print("Selected \(viewController.className)")
+        self.viewControllers = [nowPlayingTab, searchingTab, sortingTab]
     }
 }
