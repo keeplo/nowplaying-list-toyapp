@@ -8,16 +8,30 @@
 import UIKit
 
 class SearchingMovieVIewController: UIViewController {
+    private let searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.placeholder = "Search"
+        return searchBar
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
+        configureSearchBar()
         
-        let test = UILabel()
-        view.backgroundColor = .black // 배경색
-        view.addSubview(test)
-        test.text = SearchingMovieVIewController.className
-        test.textColor = .white
-        test.translatesAutoresizingMaskIntoConstraints = false
-        test.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        test.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        self.navigationController?.navigationBar.topItem?.title = "검색"
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+    }
+    
+    func configureSearchBar() {
+        view.addSubview(searchBar)
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
     }
 }
