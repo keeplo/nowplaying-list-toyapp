@@ -19,16 +19,8 @@ class NowPlayingViewDataSource: NSObject {
     private var changedListCompletion: ChangedListCompletion?
     
     private let networkManager: NowPlayingListNetworkManager
-    private var lastPage: Int = 1 {
-        didSet {
-            print("changed lasgPage \(lastPage)")
-        }
-    }
-    private var totalPage: Int = 0 {
-        didSet {
-            print("changed totalPage \(totalPage)")
-        }
-    }
+    private var lastPage: Int = 1
+    private var totalPage: Int = 0
     private var movies: [Movie] = [] {
         didSet {
             changedListCompletion?()
@@ -47,7 +39,6 @@ extension NowPlayingViewDataSource: NowPlayingViewModel {
             NSLog("\(#function) - URL 생성 실패")
             return
         }
-        print(#function)
         networkManager.loadNowPlayingList(url: url) { page in
             self.movies.append(contentsOf: page.results)
             self.lastPage = page.page
@@ -66,7 +57,7 @@ extension NowPlayingViewDataSource: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         
-        let movie = movies[indexPath.row]
+        let movie = movies[indexPath.item]
         let nsPath = NSString(string: movie.posterPath)
         cell.configureData(title: movie.title, rated: movie.rated)
         
