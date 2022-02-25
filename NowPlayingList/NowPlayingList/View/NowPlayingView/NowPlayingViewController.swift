@@ -15,7 +15,7 @@ class NowPlayingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        configuraeCollectionView()
+        configureCollectionView()
         collectionView.register(NowPlayingViewCell.classForCoder(),
                                       forCellWithReuseIdentifier: NowPlayingViewCell.className)
         viewDataSource = NowPlayingViewDataSource(
@@ -44,7 +44,7 @@ class NowPlayingViewController: UIViewController {
         viewDataSource?.loadNowPlayingList()
     }
     
-    func configuraeCollectionView() {
+    func configureCollectionView() {
         collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout.init())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(collectionView)
