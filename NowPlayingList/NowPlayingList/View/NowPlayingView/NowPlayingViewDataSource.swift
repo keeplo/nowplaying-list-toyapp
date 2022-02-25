@@ -15,8 +15,10 @@ protocol NowPlayingViewModel {
 
 class NowPlayingViewDataSource: NSObject {
     typealias ChangedListCompletion = () -> Void
+    typealias SelectedItmeCompletion = (Movie) -> Void
     
     private var changedListCompletion: ChangedListCompletion?
+    private var selectedItmeCompletion: SelectedItmeCompletion?
     
     private let networkManager: NowPlayingListNetworkManager
     private var lastPage: Int = 1
@@ -27,9 +29,12 @@ class NowPlayingViewDataSource: NSObject {
         }
     }
     
-    init(networkManager: NowPlayingListNetworkManager, changedListCompletion: @escaping ChangedListCompletion) {
+    init(networkManager: NowPlayingListNetworkManager,
+         changedListCompletion: @escaping ChangedListCompletion,
+         selectedItmeCompletion: @escaping SelectedItmeCompletion) {
         self.networkManager = networkManager
         self.changedListCompletion = changedListCompletion
+        self.selectedItmeCompletion = selectedItmeCompletion
     }
 }
 
@@ -91,6 +96,11 @@ extension NowPlayingViewDataSource: UICollectionViewDelegate {
             lastPage += 1
             loadNowPlayingList()
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let seletedMovie = movies[indexPath.item]
+        selectedItmeCompletion?(seletedMovie)
     }
 }
 

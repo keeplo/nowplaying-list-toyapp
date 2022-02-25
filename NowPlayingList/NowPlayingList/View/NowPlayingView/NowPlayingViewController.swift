@@ -18,11 +18,20 @@ class NowPlayingViewController: UIViewController {
         configuraeCollectionView()
         collectionView.register(NowPlayingViewCell.classForCoder(),
                                       forCellWithReuseIdentifier: NowPlayingViewCell.className)
-        viewDataSource = NowPlayingViewDataSource(networkManager: NowPlayingListNetworkManager()) {
+        viewDataSource = NowPlayingViewDataSource(
+            networkManager: NowPlayingListNetworkManager(),
+            changedListCompletion: {
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
             }
-        }
+        },
+            selectedItmeCompletion: { seletedMovie in
+            if let detailVC = MovieDetailViewController.updateModel(by: seletedMovie) {
+                self.navigationController?.pushViewController(detailVC, animated: false)
+            } else {
+                NSLog("\(#function) - MovieDetailViewController 인스턴스 생성실패")
+            }
+        })
         collectionView.dataSource = viewDataSource
         collectionView.delegate = viewDataSource
         
