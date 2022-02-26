@@ -16,6 +16,7 @@ class SearchingMovieVIewController: UIViewController {
     
     private var tableViewDataSource: SearchedListViewDataSource?
     private var tableView: UITableView!
+    private var autoSearchTimer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,19 +73,42 @@ class SearchingMovieVIewController: UIViewController {
 
 extension SearchingMovieVIewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        tableViewDataSource?.resetDataSource()
         guard let inputText = searchBar.text,
               !inputText.isEmpty else {
             NSLog("\(#function) - 입력된 문자가 없음")
             return
         }
+        if autoSearchTimer != nil { cancelTimer() }
+        tableViewDataSource?.resetDataSource()
         tableViewDataSource?.requestSearchMovie(of: inputText)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if let inputText = searchBar.text,
-           inputText.isEmpty {
+        guard let inputText = searchBar.text else { return }
+        
+        if inputText.isEmpty {
             tableViewDataSource?.resetDataSource()
+            cancelTimer()
+        } else {
+            startTimer {
+                self.tableViewDataSource?.requestSearchMovie(of: inputText)
+            }
         }
+    }
+}
+
+extension SearchingMovieVIewController {
+    func startTimer(perform: @escaping () -> Void) {
+        if autoSearchTimer != nil { cancelTimer() }
+        autoSearchTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in
+            self?.tableViewDataSource?.resetDataSource()
+            self?.cancelTimer()
+            perform()
+        }
+    }
+    
+    func cancelTimer() {
+        autoSearchTimer?.invalidate()
+        autoSearchTimer = nil
     }
 }
