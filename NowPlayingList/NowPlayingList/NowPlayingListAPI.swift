@@ -51,8 +51,6 @@ enum NowPlayingListAPI {
             parameters = [String(page)]
         case .searching(let query, let page):
             parameters = [query, String(page)]
-        default:
-            parameters = []
         }
         parameters.append(NowPlayingListAPI.appID)
         parameters.append("ko")

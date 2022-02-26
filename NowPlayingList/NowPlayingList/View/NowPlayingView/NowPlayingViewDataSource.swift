@@ -10,7 +10,6 @@ import UIKit
 
 protocol NowPlayingViewModel {
     func loadNowPlayingList()
-    func refreshCollectionView()
 }
 
 class NowPlayingViewDataSource: NSObject {
