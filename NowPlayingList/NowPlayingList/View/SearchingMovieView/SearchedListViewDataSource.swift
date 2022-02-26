@@ -16,23 +16,22 @@ final class SearchedListViewDataSource: NSObject, DecodeRequestable {
     typealias ChangedListCompletion = () -> Void
     typealias SelectedItmeCompletion = (Movie) -> Void
     
+    enum SearchResult {
+        case emptyResult
+        case success
+    }
+    
     private var changedListCompletion: ChangedListCompletion?
     private var selectedItmeCompletion: SelectedItmeCompletion?
     
     private var autoSearchTimer: Timer?
-    private var lastPage: Int = 1
-    private var totalPage: Int = 0
+    private var page: (last: Int, total: Int) = (1, 0)
     private var currentSearchWord: String = ""
     private var searchResult: SearchResult = .success
     private var movies: [Movie] = [] {
         didSet {
             changedListCompletion?()
         }
-    }
-    
-    enum SearchResult {
-        case emptyResult
-        case success
     }
     
     init(changedListCompletion: @escaping ChangedListCompletion,
@@ -45,7 +44,7 @@ final class SearchedListViewDataSource: NSObject, DecodeRequestable {
 extension SearchedListViewDataSource: SearchMovieViewModel {
     func requestSearchMovie(of text: String = "") {
         if !text.isEmpty { currentSearchWord = text }
-        guard let url = NowPlayingListAPI.searching(text, lastPage).makeURL() else {
+        guard let url = NowPlayingListAPI.searching(text, page.last).makeURL() else {
             NSLog("\(#function) - URL 생성 실패")
             return
         }
@@ -56,8 +55,7 @@ extension SearchedListViewDataSource: SearchMovieViewModel {
             } else {
                 self.searchResult = .success
                 self.movies.append(contentsOf: page.results)
-                self.lastPage = page.page
-                self.totalPage = page.totalPages
+                self.page = (page.page, page.totalPages)
             }
         }
     }
@@ -65,8 +63,7 @@ extension SearchedListViewDataSource: SearchMovieViewModel {
     func resetDataSource() {
         searchResult = .success
         movies = []
-        lastPage = 1
-        totalPage = 0
+        page = (1, 0)
     }
 }
 
@@ -137,8 +134,8 @@ extension SearchedListViewDataSource: UITableViewDataSource {
 
 extension SearchedListViewDataSource: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if lastPage < totalPage, indexPath.item == (movies.count / 2) {
-            lastPage += 1
+        if page.last < page.total, indexPath.item == (movies.count / 2) {
+            page.last += 1
             requestSearchMovie()
         }
     }

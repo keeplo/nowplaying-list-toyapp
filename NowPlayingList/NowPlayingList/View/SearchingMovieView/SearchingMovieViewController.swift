@@ -40,11 +40,6 @@ final class SearchingMovieVIewController: UIViewController, CanShowMovieDetailVi
         navigation = self.navigationController
         navigation?.navigationBar.topItem?.title = "검색"
     }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-    }
     
     private func configureSearchBar() {
         view.addSubview(searchBar)
