@@ -7,7 +7,8 @@
 
 import UIKit
 
-final class SearchingMovieVIewController: UIViewController {
+final class SearchingMovieVIewController: UIViewController, CanShowMovieDetailView {
+    var navigation: UINavigationController?
     private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.placeholder = "Search"
@@ -31,17 +32,14 @@ final class SearchingMovieVIewController: UIViewController {
                 }
             },
             selectedItmeCompletion: { seletedMovie in
-                if let detailVC = MovieDetailViewController.updateModel(by: seletedMovie) {
-                    self.navigationController?.pushViewController(detailVC, animated: false)
-                } else {
-                    NSLog("\(#function) - MovieDetailViewController 인스턴스 생성실패")
-                }
+                self.showDetailView(with: seletedMovie)
             })
         searchBar.delegate = self
         tableView.dataSource = tableViewDataSource
         tableView.delegate = tableViewDataSource
         
-        self.navigationController?.navigationBar.topItem?.title = "검색"
+        navigation = self.navigationController
+        navigation?.navigationBar.topItem?.title = "검색"
     }
 
     override func viewDidAppear(_ animated: Bool) {

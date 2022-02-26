@@ -7,7 +7,8 @@
 
 import UIKit
 
-final class NowPlayingViewController: UIViewController {
+final class NowPlayingViewController: UIViewController, CanShowMovieDetailView {
+    var navigation: UINavigationController?
     private var viewDataSource: NowPlayingViewDataSource?
     private var collectionView: UICollectionView!
     
@@ -24,16 +25,13 @@ final class NowPlayingViewController: UIViewController {
             }
         },
             selectedItmeCompletion: { seletedMovie in
-            if let detailVC = MovieDetailViewController.updateModel(by: seletedMovie) {
-                self.navigationController?.pushViewController(detailVC, animated: false)
-            } else {
-                NSLog("\(#function) - MovieDetailViewController 인스턴스 생성실패")
-            }
+                self.showDetailView(with: seletedMovie)
         })
         collectionView.dataSource = viewDataSource
         collectionView.delegate = viewDataSource
         
-        self.navigationController?.navigationBar.topItem?.title = "현재 상영 중"
+        navigation = self.navigationController
+        navigation?.navigationBar.topItem?.title = "현재 상영 중"
     }
      
     override func viewWillAppear(_ animated: Bool) {
