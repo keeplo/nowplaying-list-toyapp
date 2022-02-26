@@ -26,7 +26,6 @@ class SearchingMovieVIewController: UIViewController {
         tableView.register(SearchedListViewCell.classForCoder(),
                            forCellReuseIdentifier: SearchedListViewCell.className)
         tableViewDataSource = SearchedListViewDataSource(
-            networkManager: SearchingMovieNetworkManager(),
             changedListCompletion: {
                 DispatchQueue.main.async {
                     self.tableView.reloadData()

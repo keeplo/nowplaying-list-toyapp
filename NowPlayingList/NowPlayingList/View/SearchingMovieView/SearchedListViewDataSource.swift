@@ -12,14 +12,13 @@ protocol SearchMovieViewModel {
     func resetDataSource()
 }
 
-class SearchedListViewDataSource: NSObject {
+class SearchedListViewDataSource: NSObject, DecodeRequestable {
     typealias ChangedListCompletion = () -> Void
     typealias SelectedItmeCompletion = (Movie) -> Void
     
     private var changedListCompletion: ChangedListCompletion?
     private var selectedItmeCompletion: SelectedItmeCompletion?
     
-    private let networkManager: SearchingMovieNetworkManager
     private var lastPage: Int = 1
     private var totalPage: Int = 0
     private var currentSearchWord: String = ""
@@ -35,10 +34,8 @@ class SearchedListViewDataSource: NSObject {
         case success
     }
     
-    init(networkManager: SearchingMovieNetworkManager,
-         changedListCompletion: @escaping ChangedListCompletion,
+    init(changedListCompletion: @escaping ChangedListCompletion,
          selectedItmeCompletion: @escaping SelectedItmeCompletion) {
-        self.networkManager = networkManager
         self.changedListCompletion = changedListCompletion
         self.selectedItmeCompletion = selectedItmeCompletion
     }
@@ -51,7 +48,7 @@ extension SearchedListViewDataSource: SearchMovieViewModel {
             NSLog("\(#function) - URL 생성 실패")
             return
         }
-        networkManager.loadNowPlayingList(url: url) { page in
+        loadNowPlayingList(url: url, type: Page.self) { page in
             if page.results.isEmpty {
                 self.searchResult = .emptyResult
                 self.movies = []

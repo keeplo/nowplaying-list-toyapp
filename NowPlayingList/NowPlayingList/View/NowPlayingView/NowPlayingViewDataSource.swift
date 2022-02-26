@@ -12,24 +12,21 @@ protocol NowPlayingViewModel {
     func loadNowPlayingList()
 }
 
-class NowPlayingViewDataSource: NSObject {
+class NowPlayingViewDataSource: NSObject, DecodeRequestable {
     typealias ChangedListCompletion = () -> Void
     typealias SelectedItmeCompletion = (Movie) -> Void
     
     private var changedListCompletion: ChangedListCompletion?
     private var selectedItmeCompletion: SelectedItmeCompletion?
     
-    private let networkManager: NowPlayingListNetworkManager
     private var lastPage: Int = 1
     private var totalPage: Int = 0
     private var movies: [Movie] = [] {
         didSet { changedListCompletion?() }
     }
     
-    init(networkManager: NowPlayingListNetworkManager,
-         changedListCompletion: @escaping ChangedListCompletion,
+    init(changedListCompletion: @escaping ChangedListCompletion,
          selectedItmeCompletion: @escaping SelectedItmeCompletion) {
-        self.networkManager = networkManager
         self.changedListCompletion = changedListCompletion
         self.selectedItmeCompletion = selectedItmeCompletion
     }
@@ -41,7 +38,7 @@ extension NowPlayingViewDataSource: NowPlayingViewModel {
             NSLog("\(#function) - URL 생성 실패")
             return
         }
-        networkManager.loadNowPlayingList(url: url) { page in
+        loadNowPlayingList(url: url, type: Page.self) { page in
             self.movies.append(contentsOf: page.results)
             self.lastPage = page.page
             self.totalPage = page.totalPages

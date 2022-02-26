@@ -19,7 +19,6 @@ class NowPlayingViewController: UIViewController {
         collectionView.register(NowPlayingViewCell.classForCoder(),
                                       forCellWithReuseIdentifier: NowPlayingViewCell.className)
         viewDataSource = NowPlayingViewDataSource(
-            networkManager: NowPlayingListNetworkManager(),
             changedListCompletion: {
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
