@@ -23,10 +23,16 @@ class SearchedListViewDataSource: NSObject {
     private var lastPage: Int = 1
     private var totalPage: Int = 0
     private var currentSearchWord: String = ""
+    private var searchResult: SearchResult = .success
     private var movies: [Movie] = [] {
         didSet {
             changedListCompletion?()
         }
+    }
+    
+    enum SearchResult {
+        case emptyResult
+        case success
     }
     
     init(networkManager: SearchingMovieNetworkManager,
@@ -46,13 +52,20 @@ extension SearchedListViewDataSource: SearchMovieViewModel {
             return
         }
         networkManager.loadNowPlayingList(url: url) { page in
-            self.movies.append(contentsOf: page.results)
-            self.lastPage = page.page
-            self.totalPage = page.totalPages
+            if page.results.isEmpty {
+                self.searchResult = .emptyResult
+                self.movies = []
+            } else {
+                self.searchResult = .success
+                self.movies.append(contentsOf: page.results)
+                self.lastPage = page.page
+                self.totalPage = page.totalPages
+            }
         }
     }
     
     func resetDataSource() {
+        searchResult = .success
         movies = []
         lastPage = 1
         totalPage = 0
@@ -61,14 +74,47 @@ extension SearchedListViewDataSource: SearchMovieViewModel {
 
 extension SearchedListViewDataSource: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return movies.count
+        switch searchResult {
+        case .emptyResult:
+            return 1
+        case .success:
+            return movies.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchedListViewCell.className, for: indexPath) as? SearchedListViewCell else {
-            return UITableViewCell()
+        switch searchResult {
+        case .emptyResult:
+            return makeEmptyResultCell()
+        case .success:
+            guard let cell = makeSearchedListCell(tableView: tableView, at: indexPath) else {
+                return UITableViewCell()
+            }
+            return cell
         }
-        
+    }
+    
+    private func makeEmptyResultCell() -> UITableViewCell {
+        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        let noticeLabel: UILabel = {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.text = "검색 결과가 없습니다"
+            label.font = .preferredFont(forTextStyle: .title1)
+            label.textColor = .gray
+            return label
+        }()
+        cell.addSubview(noticeLabel)
+        noticeLabel.centerXAnchor.constraint(equalTo: cell.centerXAnchor).isActive = true
+        noticeLabel.centerYAnchor.constraint(equalTo: cell.centerYAnchor).isActive = true
+        return cell
+    }
+    
+    private func makeSearchedListCell(tableView: UITableView, at indexPath: IndexPath) -> SearchedListViewCell? {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchedListViewCell.className,
+                                                       for: indexPath) as? SearchedListViewCell else {
+            return nil
+        }
         let movie = movies[indexPath.row]
         let nsPath = NSString(string: movie.posterPath)
         cell.configureData(title: movie.title, date: movie.releaseDate,rated: movie.rated)
@@ -92,7 +138,6 @@ extension SearchedListViewDataSource: UITableViewDataSource {
                 }
             }
         }
-        
         return cell
     }
 }
