@@ -35,7 +35,6 @@ class NowPlayingViewController: UIViewController {
         collectionView.dataSource = viewDataSource
         collectionView.delegate = viewDataSource
         
-        
         self.navigationController?.navigationBar.topItem?.title = "현재 상영 중"
     }
      

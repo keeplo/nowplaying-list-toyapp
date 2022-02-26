@@ -116,7 +116,7 @@ extension SearchedListViewDataSource: UITableViewDataSource {
             return nil
         }
         let movie = movies[indexPath.row]
-        cell.configureData(title: movie.title, date: movie.releaseDate,rated: movie.rated)
+        cell.configureData(title: movie.title, date: movie.releaseDate, rated: movie.rated)
         guard let posterPath = movie.posterPath else {
             return cell
         }

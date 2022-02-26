@@ -35,12 +35,12 @@ class NetworkManagerTests: XCTestCase {
     
     func test_success_loadNowPlayingList메서드_성공하면_데이터반환() {
         // give
-        let url = NowPlayingListAPI.nowplaying.makeURL()!
+        let url = NowPlayingListAPI.nowplaying(1).makeURL()!
         // when
-        managerSUT.loadNowPlayingList(url: url) { movies in
+        managerSUT.loadNowPlayingList(url: url) { page in
             // then
-            print("test_success_requestData메서드_성공하면_데이터반환 - \(movies.count)")
-            XCTAssertFalse(movies.isEmpty)
+            print("test_success_requestData메서드_성공하면_데이터반환 - \(page.results.count)")
+            XCTAssertFalse(page.results.isEmpty)
         }
     }
     

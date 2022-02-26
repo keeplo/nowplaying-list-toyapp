@@ -23,9 +23,7 @@ class NowPlayingViewDataSource: NSObject {
     private var lastPage: Int = 1
     private var totalPage: Int = 0
     private var movies: [Movie] = [] {
-        didSet {
-            changedListCompletion?()
-        }
+        didSet { changedListCompletion?() }
     }
     
     init(networkManager: NowPlayingListNetworkManager,

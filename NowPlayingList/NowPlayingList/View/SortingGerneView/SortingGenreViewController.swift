@@ -12,10 +12,10 @@ class SortingGenreViewController: UIViewController {
         super.viewDidLoad()
         
         let test = UILabel()
-        view.backgroundColor = .black // 배경색
+        view.backgroundColor = .white // 배경색
         view.addSubview(test)
         test.text = SortingGenreViewController.className
-        test.textColor = .white
+        test.textColor = .label
         test.translatesAutoresizingMaskIntoConstraints = false
         test.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         test.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
