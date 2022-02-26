@@ -62,14 +62,17 @@ extension NowPlayingViewDataSource: UICollectionViewDataSource {
         }
         
         let movie = movies[indexPath.item]
-        let nsPath = NSString(string: movie.posterPath)
         cell.configureData(title: movie.title, rated: movie.rated)
+        guard let posterPath = movie.posterPath else {
+            return cell
+        }
+        let nsPath = NSString(string: posterPath)
         
         if let cachedImage = ImageCacheManager.shared.object(forKey: nsPath) {
             cell.configureImage(cachedImage)
         } else {
             DispatchQueue.global().async {
-                guard let imageURL = NowPlayingListAPI.makeImageURL(movie.posterPath) else {
+                guard let imageURL = NowPlayingListAPI.makeImageURL(posterPath) else {
                     NSLog("\(#function) - 포스터 URL 생성 실패")
                     return
                 }
