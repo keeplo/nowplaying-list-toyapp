@@ -12,7 +12,7 @@ protocol NowPlayingViewModel {
     func loadNowPlayingList()
 }
 
-class NowPlayingViewDataSource: NSObject, DecodeRequestable {
+final class NowPlayingViewDataSource: NSObject, DecodeRequestable {
     typealias ChangedListCompletion = () -> Void
     typealias SelectedItmeCompletion = (Movie) -> Void
     

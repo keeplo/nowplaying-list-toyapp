@@ -12,7 +12,7 @@ protocol SearchMovieViewModel {
     func resetDataSource()
 }
 
-class SearchedListViewDataSource: NSObject, DecodeRequestable {
+final class SearchedListViewDataSource: NSObject, DecodeRequestable {
     typealias ChangedListCompletion = () -> Void
     typealias SelectedItmeCompletion = (Movie) -> Void
     

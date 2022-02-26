@@ -7,9 +7,8 @@
 
 import UIKit
 
-class NowPlayingViewController: UIViewController {
-    var viewDataSource: NowPlayingViewDataSource?
-    
+final class NowPlayingViewController: UIViewController {
+    private var viewDataSource: NowPlayingViewDataSource?
     private var collectionView: UICollectionView!
     
     override func viewDidLoad() {

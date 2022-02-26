@@ -63,7 +63,7 @@ final class SearchedListViewCell: UITableViewCell {
 
 // MARK: -- Custom Methods
 extension SearchedListViewCell {
-    func setUpCellLayout() {
+    private func setUpCellLayout() {
         contentView.addSubview(posterImageView)
     
         let height = UIScreen.main.bounds.height / 5 - (CGFloat.padding * 4)

@@ -7,13 +7,12 @@
 
 import UIKit
 
-class SearchingMovieVIewController: UIViewController {
+final class SearchingMovieVIewController: UIViewController {
     private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.placeholder = "Search"
         return searchBar
     }()
-    
     private var tableViewDataSource: SearchedListViewDataSource?
     private var tableView: UITableView!
     private var autoSearchTimer: Timer?

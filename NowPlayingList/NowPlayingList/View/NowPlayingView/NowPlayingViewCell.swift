@@ -54,7 +54,7 @@ final class NowPlayingViewCell: UICollectionViewCell {
 
 // MARK: -- Custom Methods
 extension NowPlayingViewCell {
-    func setUpCellLayout() {
+    private func setUpCellLayout() {
         cellStackView.addArrangedSubview(movieThumbnailImageView)
         cellStackView.addArrangedSubview(movieTitleLabel)
         cellStackView.addArrangedSubview(movieRatedLabel)

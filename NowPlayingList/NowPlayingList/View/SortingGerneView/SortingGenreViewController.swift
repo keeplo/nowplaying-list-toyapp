@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SortingGenreViewController: UIViewController {
+final class SortingGenreViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
