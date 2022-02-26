@@ -41,7 +41,7 @@ final class NowPlayingViewController: UIViewController {
         viewDataSource?.loadNowPlayingList()
     }
     
-    func configureCollectionView() {
+    private func configureCollectionView() {
         collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout.init())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(collectionView)

@@ -49,7 +49,7 @@ final class SearchingMovieVIewController: UIViewController {
         
     }
     
-    func configureSearchBar() {
+    private func configureSearchBar() {
         view.addSubview(searchBar)
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
@@ -57,7 +57,7 @@ final class SearchingMovieVIewController: UIViewController {
         searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
     }
     
-    func configureTableView() {
+    private func configureTableView() {
         tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(tableView)
@@ -96,7 +96,7 @@ extension SearchingMovieVIewController: UISearchBarDelegate {
 }
 
 extension SearchingMovieVIewController {
-    func startTimer(perform: @escaping () -> Void) {
+    private func startTimer(perform: @escaping () -> Void) {
         if autoSearchTimer != nil { cancelTimer() }
         autoSearchTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in
             self?.tableViewDataSource?.resetDataSource()
@@ -105,7 +105,7 @@ extension SearchingMovieVIewController {
         }
     }
     
-    func cancelTimer() {
+    private func cancelTimer() {
         autoSearchTimer?.invalidate()
         autoSearchTimer = nil
     }

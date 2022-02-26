@@ -8,26 +8,26 @@
 import UIKit
 
 final class NowPlayingViewCell: UICollectionViewCell {
-    var movieThumbnailImageView: UIImageView = {
+    private var movieThumbnailImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
-    var movieTitleLabel: UILabel = {
+    private var movieTitleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
         label.font = .preferredFont(forTextStyle: .headline)
         label.textColor = .label
         return label
     }()
-    var movieRatedLabel: UILabel = {
+    private var movieRatedLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
         label.font = .preferredFont(forTextStyle: .subheadline)
         label.textColor = .green
         return label
     }()
-    let cellStackView: UIStackView = {
+    private let cellStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical

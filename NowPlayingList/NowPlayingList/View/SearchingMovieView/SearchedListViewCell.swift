@@ -8,34 +8,34 @@
 import UIKit
 
 final class SearchedListViewCell: UITableViewCell {
-    var posterImageView: UIImageView = {
+    private var posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-    var movieTitleLabel: UILabel = {
+    private var movieTitleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
         label.font = .preferredFont(forTextStyle: .headline)
         label.textColor = .label
         return label
     }()
-    var movieDateLabel: UILabel = {
+    private var movieDateLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
         label.font = .preferredFont(forTextStyle: .subheadline)
         label.textColor = .label
         return label
     }()
-    var movieRatedLabel: UILabel = {
+    private var movieRatedLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
         label.font = .preferredFont(forTextStyle: .subheadline)
         label.textColor = .label
         return label
     }()
-    let labelsStackView: UIStackView = {
+    private let labelsStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
