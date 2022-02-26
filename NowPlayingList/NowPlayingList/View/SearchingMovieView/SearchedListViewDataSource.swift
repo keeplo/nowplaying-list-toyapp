@@ -19,6 +19,7 @@ final class SearchedListViewDataSource: NSObject, DecodeRequestable {
     private var changedListCompletion: ChangedListCompletion?
     private var selectedItmeCompletion: SelectedItmeCompletion?
     
+    private var autoSearchTimer: Timer?
     private var lastPage: Int = 1
     private var totalPage: Int = 0
     private var currentSearchWord: String = ""
@@ -150,5 +151,47 @@ extension SearchedListViewDataSource: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let height = UIScreen.main.bounds.height / 5
         return height
+    }
+}
+
+extension SearchedListViewDataSource: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let inputText = searchBar.text,
+              !inputText.isEmpty else {
+            NSLog("\(#function) - 입력된 문자가 없음")
+            return
+        }
+        if autoSearchTimer != nil { cancelTimer() }
+        resetDataSource()
+        requestSearchMovie(of: inputText)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        guard let inputText = searchBar.text else { return }
+        
+        if inputText.isEmpty {
+            resetDataSource()
+            cancelTimer()
+        } else {
+            startTimer {
+                self.requestSearchMovie(of: inputText)
+            }
+        }
+    }
+}
+
+extension SearchedListViewDataSource {
+    private func startTimer(perform: @escaping () -> Void) {
+        if autoSearchTimer != nil { cancelTimer() }
+        autoSearchTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in
+            self?.resetDataSource()
+            self?.cancelTimer()
+            perform()
+        }
+    }
+    
+    private func cancelTimer() {
+        autoSearchTimer?.invalidate()
+        autoSearchTimer = nil
     }
 }

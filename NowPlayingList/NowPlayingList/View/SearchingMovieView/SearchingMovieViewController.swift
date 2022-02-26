@@ -16,7 +16,6 @@ final class SearchingMovieVIewController: UIViewController, CanShowMovieDetailVi
     }()
     private var tableViewDataSource: SearchedListViewDataSource?
     private var tableView: UITableView!
-    private var autoSearchTimer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +33,7 @@ final class SearchingMovieVIewController: UIViewController, CanShowMovieDetailVi
             selectedItmeCompletion: { seletedMovie in
                 self.showDetailView(with: seletedMovie)
             })
-        searchBar.delegate = self
+        searchBar.delegate = tableViewDataSource
         tableView.dataSource = tableViewDataSource
         tableView.delegate = tableViewDataSource
         
@@ -64,47 +63,5 @@ final class SearchingMovieVIewController: UIViewController, CanShowMovieDetailVi
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-    }
-}
-
-extension SearchingMovieVIewController: UISearchBarDelegate {
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        guard let inputText = searchBar.text,
-              !inputText.isEmpty else {
-            NSLog("\(#function) - 입력된 문자가 없음")
-            return
-        }
-        if autoSearchTimer != nil { cancelTimer() }
-        tableViewDataSource?.resetDataSource()
-        tableViewDataSource?.requestSearchMovie(of: inputText)
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        guard let inputText = searchBar.text else { return }
-        
-        if inputText.isEmpty {
-            tableViewDataSource?.resetDataSource()
-            cancelTimer()
-        } else {
-            startTimer {
-                self.tableViewDataSource?.requestSearchMovie(of: inputText)
-            }
-        }
-    }
-}
-
-extension SearchingMovieVIewController {
-    private func startTimer(perform: @escaping () -> Void) {
-        if autoSearchTimer != nil { cancelTimer() }
-        autoSearchTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in
-            self?.tableViewDataSource?.resetDataSource()
-            self?.cancelTimer()
-            perform()
-        }
-    }
-    
-    private func cancelTimer() {
-        autoSearchTimer?.invalidate()
-        autoSearchTimer = nil
     }
 }
