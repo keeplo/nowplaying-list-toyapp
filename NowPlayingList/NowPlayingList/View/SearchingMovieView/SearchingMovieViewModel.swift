@@ -111,7 +111,7 @@ extension SearchingMovieViewModelImpl: UITableViewDataSource {
             return nil
         }
         let movie = movies[indexPath.row]
-        cell.configureData(title: movie.title, date: movie.releaseDate, rated: movie.rated)
+        cell.configureData(movie)
     
         guard let posterPath = movie.posterPath else { return cell }
         let nsPath = NSString(string: posterPath)

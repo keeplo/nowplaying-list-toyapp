@@ -57,7 +57,7 @@ extension NowPlayingViewModelImpl: UICollectionViewDataSource {
         }
         
         let movie = movies[indexPath.item]
-        cell.configureData(title: movie.title, rated: movie.rated)
+        cell.configureData(movie)
         
         guard let posterPath = movie.posterPath else { return cell }
         let nsPath = NSString(string: posterPath)

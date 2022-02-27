@@ -8,7 +8,7 @@
 import UIKit
 
 final class NowPlayingViewCell: UICollectionViewCell {
-    private var movieThumbnailImageView: UIImageView = {
+    private var posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         return imageView
@@ -46,7 +46,7 @@ final class NowPlayingViewCell: UICollectionViewCell {
     }
     
     override func prepareForReuse() {
-        movieThumbnailImageView.image = nil
+        posterImageView.image = nil
         movieTitleLabel.text = ""
         movieRatedLabel.text = ""
     }
@@ -55,7 +55,7 @@ final class NowPlayingViewCell: UICollectionViewCell {
 // MARK: -- Custom Methods
 extension NowPlayingViewCell {
     private func setUpCellLayout() {
-        cellStackView.addArrangedSubview(movieThumbnailImageView)
+        cellStackView.addArrangedSubview(posterImageView)
         cellStackView.addArrangedSubview(movieTitleLabel)
         cellStackView.addArrangedSubview(movieRatedLabel)
         contentView.addSubview(cellStackView)
@@ -65,13 +65,17 @@ extension NowPlayingViewCell {
         cellStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         cellStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
     }
-    
-    func configureData(title: String, rated: Double) {
-        movieTitleLabel.text = title
-        movieRatedLabel.text = "★" + "\(rated)"
+}
+
+extension NowPlayingViewCell: Configurable {
+    func configureData<T>(_ data: T) {
+        guard let movie = data as? Movie else { return }
+        
+        movieTitleLabel.text = movie.title
+        movieRatedLabel.text = "★" + "\(movie.rated)"
     }
     
     func configureImage(_ image: UIImage) {
-        movieThumbnailImageView.image = image
+        posterImageView.image = image
     }
 }
