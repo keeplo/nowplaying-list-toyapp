@@ -9,12 +9,12 @@ import XCTest
 @testable import NowPlayingList
 
 class NetworkManagerTests: XCTestCase {
-    var managerSUT: NowPlayingViewDataSource!
+    var managerSUT: NowPlayingViewModelImpl!
     var mockSUT: MockDecodeRequestable!
     
     override func setUp() {
          super.setUp()
-        managerSUT = NowPlayingViewDataSource(changedListCompletion: {}, selectedItmeCompletion: { _ in })
+        managerSUT = NowPlayingViewModelImpl(changedListCompletion: {}, selectedItmeCompletion: { _ in })
     }
     
     func test_success_requestData메서드() {
@@ -37,7 +37,7 @@ class NetworkManagerTests: XCTestCase {
         // give
         let url = NowPlayingListAPI.nowplaying(1).makeURL()!
         // when
-        managerSUT.loadNowPlayingList(url: url, type: Page.self) { page in
+        managerSUT.parseRequestedData(url: url, type: Page.self) { page in
             // then
             print("test_success_requestData메서드_성공하면_데이터반환 - \(page.results.count)")
             XCTAssertFalse(page.results.isEmpty)

@@ -13,7 +13,7 @@ enum NetworkError: Error {
 
 protocol DecodeRequestable {
     func requestData(with url: URL, _ completion: @escaping (Result<Data, Error>) -> Void)
-    func loadNowPlayingList<T: Decodable>(url: URL, type: T.Type, _ completion: @escaping (T) -> Void)
+    func parseRequestedData<T: Decodable>(url: URL, type: T.Type, _ completion: @escaping (T) -> Void)
 }
 
 extension DecodeRequestable {
@@ -36,7 +36,7 @@ extension DecodeRequestable {
         }.resume()
     }
     
-    func loadNowPlayingList<T: Decodable>(url: URL, type: T.Type = T.self, _ completion: @escaping (T) -> Void) {
+    func parseRequestedData<T: Decodable>(url: URL, type: T.Type = T.self, _ completion: @escaping (T) -> Void) {
         requestData(with: url) { result in
             switch result {
             case .success(let data):

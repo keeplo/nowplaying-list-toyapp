@@ -1,5 +1,5 @@
 //
-//  NowPlayingViewDataSource.swift
+//  NowPlayingViewModel.swift
 //  NowPlayingList
 //
 //  Created by Yongwoo Marco on 2022/02/17.
@@ -9,10 +9,10 @@ import Foundation
 import UIKit
 
 protocol NowPlayingViewModel {
-    func loadNowPlayingList()
+    func fetchNowPlayingList()
 }
 
-final class NowPlayingViewDataSource: NSObject, DecodeRequestable {
+final class NowPlayingViewModelImpl: NSObject, DecodeRequestable {
     typealias ChangedListCompletion = () -> Void
     typealias SelectedItmeCompletion = (Movie) -> Void
     
@@ -32,13 +32,13 @@ final class NowPlayingViewDataSource: NSObject, DecodeRequestable {
     }
 }
 
-extension NowPlayingViewDataSource: NowPlayingViewModel {
-    func loadNowPlayingList() {
+extension NowPlayingViewModelImpl: NowPlayingViewModel{
+    func fetchNowPlayingList() {
         guard let url = NowPlayingListAPI.nowplaying(lastPage).makeURL() else {
             NSLog("\(#function) - URL 생성 실패")
             return
         }
-        loadNowPlayingList(url: url, type: Page.self) { page in
+        parseRequestedData(url: url, type: Page.self) { page in
             self.movies.append(contentsOf: page.results)
             self.lastPage = page.page
             self.totalPage = page.totalPages
@@ -46,7 +46,7 @@ extension NowPlayingViewDataSource: NowPlayingViewModel {
     }
 }
 
-extension NowPlayingViewDataSource: UICollectionViewDataSource {
+extension NowPlayingViewModelImpl: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return movies.count
     }
@@ -79,11 +79,11 @@ extension NowPlayingViewDataSource: UICollectionViewDataSource {
     }
 }
 
-extension NowPlayingViewDataSource: UICollectionViewDelegate {
+extension NowPlayingViewModelImpl: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if lastPage < totalPage, indexPath.item == (movies.count / 4) {
             lastPage += 1
-            loadNowPlayingList()
+            fetchNowPlayingList()
         }
     }
     
@@ -93,7 +93,7 @@ extension NowPlayingViewDataSource: UICollectionViewDelegate {
     }
 }
 
-extension NowPlayingViewDataSource: UICollectionViewDelegateFlowLayout {
+extension NowPlayingViewModelImpl: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = UIScreen.main.bounds.width
         let itemPerRow: CGFloat = 2

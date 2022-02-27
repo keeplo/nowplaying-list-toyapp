@@ -9,7 +9,7 @@ import UIKit
 
 final class NowPlayingViewController: UIViewController, CanShowMovieDetailView {
     var navigation: UINavigationController?
-    private var viewDataSource: NowPlayingViewDataSource?
+    private var viewModel: NowPlayingViewModelImpl?
     private var collectionView: UICollectionView!
     
     override func viewDidLoad() {
@@ -18,7 +18,7 @@ final class NowPlayingViewController: UIViewController, CanShowMovieDetailView {
         configureCollectionView()
         collectionView.register(NowPlayingViewCell.classForCoder(),
                                       forCellWithReuseIdentifier: NowPlayingViewCell.className)
-        viewDataSource = NowPlayingViewDataSource(
+        viewModel = NowPlayingViewModelImpl(
             changedListCompletion: {
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
@@ -27,8 +27,8 @@ final class NowPlayingViewController: UIViewController, CanShowMovieDetailView {
             selectedItmeCompletion: { seletedMovie in
                 self.showDetailView(with: seletedMovie)
         })
-        collectionView.dataSource = viewDataSource
-        collectionView.delegate = viewDataSource
+        collectionView.dataSource = viewModel
+        collectionView.delegate = viewModel
         
         navigation = self.navigationController
         navigation?.navigationBar.topItem?.title = "현재 상영 중"
@@ -36,7 +36,7 @@ final class NowPlayingViewController: UIViewController, CanShowMovieDetailView {
      
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        viewDataSource?.loadNowPlayingList()
+        viewModel?.fetchNowPlayingList()
     }
     
     private func configureCollectionView() {

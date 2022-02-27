@@ -19,7 +19,7 @@ struct MockDecodeRequestable: DecodeRequestable {
         }
     }
     
-    func loadNowPlayingList<T: Decodable>(url: URL, type: T.Type, _ completion: @escaping (T) -> Void) {
+    func parseRequestedData<T: Decodable>(url: URL, type: T.Type, _ completion: @escaping (T) -> Void) {
         
     }
 }

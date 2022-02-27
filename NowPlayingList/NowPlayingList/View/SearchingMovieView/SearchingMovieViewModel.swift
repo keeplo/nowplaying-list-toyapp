@@ -1,5 +1,5 @@
 //
-//  SearchedListViewDataSource.swift
+//  SearchingMovieViewModelImpl.swift
 //  NowPlayingList
 //
 //  Created by Yongwoo Marco on 2022/02/25.
@@ -12,7 +12,7 @@ protocol SearchMovieViewModel {
     func resetDataSource()
 }
 
-final class SearchedListViewDataSource: NSObject, DecodeRequestable {
+final class SearchingMovieViewModelImpl: NSObject, DecodeRequestable {
     typealias ChangedListCompletion = () -> Void
     typealias SelectedItmeCompletion = (Movie) -> Void
     
@@ -41,14 +41,14 @@ final class SearchedListViewDataSource: NSObject, DecodeRequestable {
     }
 }
 
-extension SearchedListViewDataSource: SearchMovieViewModel {
+extension SearchingMovieViewModelImpl: SearchMovieViewModel {
     func requestSearchMovie(of text: String = "") {
         if !text.isEmpty { currentSearchWord = text }
         guard let url = NowPlayingListAPI.searching(text, page.last).makeURL() else {
             NSLog("\(#function) - URL 생성 실패")
             return
         }
-        loadNowPlayingList(url: url, type: Page.self) { page in
+        parseRequestedData(url: url, type: Page.self) { page in
             if page.results.isEmpty {
                 self.searchResult = .emptyResult
                 self.movies = []
@@ -67,7 +67,7 @@ extension SearchedListViewDataSource: SearchMovieViewModel {
     }
 }
 
-extension SearchedListViewDataSource: UITableViewDataSource {
+extension SearchingMovieViewModelImpl: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch searchResult {
         case .emptyResult:
@@ -132,7 +132,7 @@ extension SearchedListViewDataSource: UITableViewDataSource {
     }
 }
 
-extension SearchedListViewDataSource: UITableViewDelegate {
+extension SearchingMovieViewModelImpl: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if page.last < page.total, indexPath.item == (movies.count / 2) {
             page.last += 1
@@ -151,7 +151,7 @@ extension SearchedListViewDataSource: UITableViewDelegate {
     }
 }
 
-extension SearchedListViewDataSource: UISearchBarDelegate {
+extension SearchingMovieViewModelImpl: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let inputText = searchBar.text,
               !inputText.isEmpty else {
@@ -165,7 +165,6 @@ extension SearchedListViewDataSource: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         guard let inputText = searchBar.text else { return }
-        
         if inputText.isEmpty {
             resetDataSource()
             cancelTimer()
@@ -177,7 +176,7 @@ extension SearchedListViewDataSource: UISearchBarDelegate {
     }
 }
 
-extension SearchedListViewDataSource {
+extension SearchingMovieViewModelImpl {
     private func startTimer(perform: @escaping () -> Void) {
         if autoSearchTimer != nil { cancelTimer() }
         autoSearchTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in

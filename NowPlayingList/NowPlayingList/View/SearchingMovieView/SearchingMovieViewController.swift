@@ -14,7 +14,7 @@ final class SearchingMovieVIewController: UIViewController, CanShowMovieDetailVi
         searchBar.placeholder = "Search"
         return searchBar
     }()
-    private var tableViewDataSource: SearchedListViewDataSource?
+    private var viewModel: SearchingMovieViewModelImpl?
     private var tableView: UITableView!
     
     override func viewDidLoad() {
@@ -24,7 +24,7 @@ final class SearchingMovieVIewController: UIViewController, CanShowMovieDetailVi
         configureTableView()
         tableView.register(SearchedListViewCell.classForCoder(),
                            forCellReuseIdentifier: SearchedListViewCell.className)
-        tableViewDataSource = SearchedListViewDataSource(
+        viewModel = SearchingMovieViewModelImpl(
             changedListCompletion: {
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
@@ -33,9 +33,9 @@ final class SearchingMovieVIewController: UIViewController, CanShowMovieDetailVi
             selectedItmeCompletion: { seletedMovie in
                 self.showDetailView(with: seletedMovie)
             })
-        searchBar.delegate = tableViewDataSource
-        tableView.dataSource = tableViewDataSource
-        tableView.delegate = tableViewDataSource
+        searchBar.delegate = viewModel
+        tableView.dataSource = viewModel
+        tableView.delegate = viewModel
         
         navigation = self.navigationController
         navigation?.navigationBar.topItem?.title = "검색"
