@@ -11,7 +11,7 @@ final class SearchingMovieVIewController: UIViewController, CanShowMovieDetailVi
     var navigation: UINavigationController?
     private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
-        searchBar.placeholder = "Search"
+        searchBar.placeholder = Strings.SearchBar.placeholder.description
         return searchBar
     }()
     private var viewModel: SearchingMovieViewModelImpl?
@@ -37,7 +37,7 @@ final class SearchingMovieVIewController: UIViewController, CanShowMovieDetailVi
         tableView.delegate = viewModel
         
         navigation = self.navigationController
-        navigation?.navigationBar.topItem?.title = "검색"
+        navigation?.navigationBar.topItem?.title = Strings.Navigation.searching.description
     }
     
     override func viewWillAppear(_ animated: Bool) {

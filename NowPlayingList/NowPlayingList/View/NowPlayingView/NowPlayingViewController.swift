@@ -16,7 +16,7 @@ final class NowPlayingViewController: UIViewController, CanShowMovieDetailView {
         super.viewDidLoad()
         configureCollectionView()
         collectionView.register(NowPlayingViewCell.classForCoder(),
-                                      forCellWithReuseIdentifier: NowPlayingViewCell.className)
+                                forCellWithReuseIdentifier: NowPlayingViewCell.className)
         viewModel = NowPlayingViewModelImpl(
             changedListCompletion: {
             DispatchQueue.main.async {
@@ -30,7 +30,7 @@ final class NowPlayingViewController: UIViewController, CanShowMovieDetailView {
         collectionView.delegate = viewModel
         
         navigation = self.navigationController
-        navigation?.navigationBar.topItem?.title = "현재 상영 중"
+        navigation?.navigationBar.topItem?.title = Strings.Navigation.nowplaying.description
     }
      
     override func viewWillAppear(_ animated: Bool) {

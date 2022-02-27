@@ -13,10 +13,10 @@ final class MovieDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         let test = UILabel()
         view.addSubview(test)
-        test.text = seletedMovie?.title ?? "x"
+        test.text = seletedMovie?.title
         test.textColor = .label
         test.translatesAutoresizingMaskIntoConstraints = false
         test.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

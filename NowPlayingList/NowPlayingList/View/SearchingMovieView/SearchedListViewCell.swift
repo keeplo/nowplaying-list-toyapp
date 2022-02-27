@@ -56,8 +56,8 @@ final class SearchedListViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         posterImageView.image = nil
-        movieTitleLabel.text = ""
-        movieRatedLabel.text = ""
+        movieTitleLabel.text = Strings.emptyString
+        movieRatedLabel.text = Strings.emptyString
     }
 }
 
@@ -96,7 +96,7 @@ extension SearchedListViewCell: Configurable {
         
         movieTitleLabel.text = movie.title
         movieDateLabel.text = movie.releaseDate
-        movieRatedLabel.text = "★" + "\(movie.rated)"
+        movieRatedLabel.text = Strings.starText + "\(movie.rated)"
     }
     
     func configureImage(_ image: UIImage) {

@@ -26,7 +26,7 @@ final class SearchingMovieViewModelImpl: NSObject, DecodeRequestable {
     
     private var autoSearchTimer: Timer?
     private var page: (last: Int, total: Int) = (1, 0)
-    private var currentSearchWord: String = ""
+    private var currentSearchWord: String = Strings.emptyString
     private var searchResult: SearchResult = .success
     private var movies: [Movie] = [] {
         didSet {
@@ -42,7 +42,7 @@ final class SearchingMovieViewModelImpl: NSObject, DecodeRequestable {
 }
 
 extension SearchingMovieViewModelImpl: SearchMovieViewModel {
-    func requestSearchMovie(of text: String = "") {
+    func requestSearchMovie(of text: String = Strings.emptyString) {
         if !text.isEmpty { currentSearchWord = text }
         guard let url = NowPlayingListAPI.searching(text, page.last).makeURL() else {
             NSLog("\(#function) - URL 생성 실패")

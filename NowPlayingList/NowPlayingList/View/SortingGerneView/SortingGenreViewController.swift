@@ -10,7 +10,7 @@ import UIKit
 final class SortingGenreViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         let test = UILabel()
         view.addSubview(test)
         test.text = SortingGenreViewController.className

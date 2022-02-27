@@ -47,8 +47,8 @@ final class NowPlayingViewCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         posterImageView.image = nil
-        movieTitleLabel.text = ""
-        movieRatedLabel.text = ""
+        movieTitleLabel.text = Strings.emptyString
+        movieRatedLabel.text = Strings.emptyString
     }
 }
 
@@ -72,7 +72,7 @@ extension NowPlayingViewCell: Configurable {
         guard let movie = data as? Movie else { return }
         
         movieTitleLabel.text = movie.title
-        movieRatedLabel.text = "★" + "\(movie.rated)"
+        movieRatedLabel.text = Strings.starText + "\(movie.rated)"
     }
     
     func configureImage(_ image: UIImage) {
