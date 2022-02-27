@@ -15,7 +15,6 @@ final class MovieDetailViewController: UIViewController {
         super.viewDidLoad()
         
         let test = UILabel()
-        view.backgroundColor = .white // 배경색
         view.addSubview(test)
         test.text = seletedMovie?.title ?? "x"
         test.textColor = .label
@@ -26,7 +25,7 @@ final class MovieDetailViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        view.backgroundColor = .systemBackground
     }
     
     static func updateModel(by movie: Movie) -> MovieDetailViewController? {

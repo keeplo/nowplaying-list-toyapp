@@ -19,7 +19,6 @@ final class SearchingMovieVIewController: UIViewController, CanShowMovieDetailVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         configureSearchBar()
         configureTableView()
         tableView.register(SearchedListViewCell.classForCoder(),
@@ -39,6 +38,11 @@ final class SearchingMovieVIewController: UIViewController, CanShowMovieDetailVi
         
         navigation = self.navigationController
         navigation?.navigationBar.topItem?.title = "검색"
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        view.backgroundColor = .systemBackground
     }
     
     private func configureSearchBar() {

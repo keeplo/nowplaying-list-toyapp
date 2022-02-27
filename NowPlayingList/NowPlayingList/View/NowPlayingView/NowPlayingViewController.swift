@@ -14,7 +14,6 @@ final class NowPlayingViewController: UIViewController, CanShowMovieDetailView {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         configureCollectionView()
         collectionView.register(NowPlayingViewCell.classForCoder(),
                                       forCellWithReuseIdentifier: NowPlayingViewCell.className)
@@ -36,6 +35,7 @@ final class NowPlayingViewController: UIViewController, CanShowMovieDetailView {
      
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        view.backgroundColor = .systemBackground
         viewModel?.fetchNowPlayingList()
     }
     
