@@ -19,8 +19,7 @@ final class NowPlayingViewModelImpl: NSObject, DecodeRequestable {
     private var changedListCompletion: ChangedListCompletion?
     private var selectedItmeCompletion: SelectedItmeCompletion?
     
-    private var lastPage: Int = 1
-    private var totalPage: Int = 0
+    private var page: (last: Int, total: Int) = (1, 0)
     private var movies: [Movie] = [] {
         didSet { changedListCompletion?() }
     }
@@ -34,14 +33,13 @@ final class NowPlayingViewModelImpl: NSObject, DecodeRequestable {
 
 extension NowPlayingViewModelImpl: NowPlayingViewModel{
     func fetchNowPlayingList() {
-        guard let url = NowPlayingListAPI.nowplaying(lastPage).makeURL() else {
+        guard let url = NowPlayingListAPI.nowplaying(page.last).makeURL() else {
             NSLog("\(#function) - URL 생성 실패")
             return
         }
         parseRequestedData(url: url, type: Page.self) { page in
             self.movies.append(contentsOf: page.results)
-            self.lastPage = page.page
-            self.totalPage = page.totalPages
+            self.page = (page.page, page.totalPages)
         }
     }
 }
@@ -81,8 +79,8 @@ extension NowPlayingViewModelImpl: UICollectionViewDataSource {
 
 extension NowPlayingViewModelImpl: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if lastPage < totalPage, indexPath.item == (movies.count / 4) {
-            lastPage += 1
+        if page.last < page.total, indexPath.item == (movies.count / 4) {
+            page.last += 1
             fetchNowPlayingList()
         }
     }
