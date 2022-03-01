@@ -5,8 +5,7 @@
 //  Created by Yongwoo Marco on 2022/02/25.
 //
 
-import Foundation
-import UIKit
+import UIKit.UIGeometry
 
 extension CGFloat {
     static let padding: CGFloat = 8.0

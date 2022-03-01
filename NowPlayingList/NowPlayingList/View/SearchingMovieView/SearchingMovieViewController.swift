@@ -7,51 +7,45 @@
 
 import UIKit
 
-class SearchingMovieVIewController: UIViewController {
+final class SearchingMovieVIewController: UIViewController, CanShowMovieDetailView {
+    var navigation: UINavigationController?
     private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
-        searchBar.placeholder = "Search"
+        searchBar.placeholder = Strings.SearchBar.placeholder.description
         return searchBar
     }()
-    
-    private var tableViewDataSource: SearchedListViewDataSource?
+    private var viewModel: SearchingMovieViewModelImpl?
     private var tableView: UITableView!
-    private var autoSearchTimer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         configureSearchBar()
         configureTableView()
         tableView.register(SearchedListViewCell.classForCoder(),
                            forCellReuseIdentifier: SearchedListViewCell.className)
-        tableViewDataSource = SearchedListViewDataSource(
-            networkManager: SearchingMovieNetworkManager(),
+        viewModel = SearchingMovieViewModelImpl(
             changedListCompletion: {
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
             },
             selectedItmeCompletion: { seletedMovie in
-                if let detailVC = MovieDetailViewController.updateModel(by: seletedMovie) {
-                    self.navigationController?.pushViewController(detailVC, animated: false)
-                } else {
-                    NSLog("\(#function) - MovieDetailViewController 인스턴스 생성실패")
-                }
+                self.showDetailView(with: seletedMovie)
             })
-        searchBar.delegate = self
-        tableView.dataSource = tableViewDataSource
-        tableView.delegate = tableViewDataSource
+        searchBar.delegate = viewModel
+        tableView.dataSource = viewModel
+        tableView.delegate = viewModel
         
-        self.navigationController?.navigationBar.topItem?.title = "검색"
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
+        navigation = self.navigationController
+        navigation?.navigationBar.topItem?.title = Strings.Navigation.searching.description
     }
     
-    func configureSearchBar() {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        view.backgroundColor = .systemBackground
+    }
+    
+    private func configureSearchBar() {
         view.addSubview(searchBar)
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
@@ -59,7 +53,7 @@ class SearchingMovieVIewController: UIViewController {
         searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
     }
     
-    func configureTableView() {
+    private func configureTableView() {
         tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(tableView)
@@ -68,47 +62,5 @@ class SearchingMovieVIewController: UIViewController {
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-    }
-}
-
-extension SearchingMovieVIewController: UISearchBarDelegate {
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        guard let inputText = searchBar.text,
-              !inputText.isEmpty else {
-            NSLog("\(#function) - 입력된 문자가 없음")
-            return
-        }
-        if autoSearchTimer != nil { cancelTimer() }
-        tableViewDataSource?.resetDataSource()
-        tableViewDataSource?.requestSearchMovie(of: inputText)
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        guard let inputText = searchBar.text else { return }
-        
-        if inputText.isEmpty {
-            tableViewDataSource?.resetDataSource()
-            cancelTimer()
-        } else {
-            startTimer {
-                self.tableViewDataSource?.requestSearchMovie(of: inputText)
-            }
-        }
-    }
-}
-
-extension SearchingMovieVIewController {
-    func startTimer(perform: @escaping () -> Void) {
-        if autoSearchTimer != nil { cancelTimer() }
-        autoSearchTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in
-            self?.tableViewDataSource?.resetDataSource()
-            self?.cancelTimer()
-            perform()
-        }
-    }
-    
-    func cancelTimer() {
-        autoSearchTimer?.invalidate()
-        autoSearchTimer = nil
     }
 }

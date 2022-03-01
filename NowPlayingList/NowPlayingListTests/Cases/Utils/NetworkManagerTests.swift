@@ -9,17 +9,17 @@ import XCTest
 @testable import NowPlayingList
 
 class NetworkManagerTests: XCTestCase {
-    var managerSUT: NowPlayingListNetworkManager!
-    var mockSUT: MockNetworkManager!
+    var managerSUT: NowPlayingViewModelImpl!
+    var mockSUT: MockDecodeRequestable!
     
     override func setUp() {
          super.setUp()
-        managerSUT = NowPlayingListNetworkManager()
+        managerSUT = NowPlayingViewModelImpl(changedListCompletion: {}, selectedItmeCompletion: { _ in })
     }
     
     func test_success_requestData메서드() {
         // give
-        let mock = MockNetworkManager(isSuccess: true)
+        let mock = MockDecodeRequestable(isSuccess: true)
         // when
         mock.requestData(with: URL(string: "http://dummy.url")!) { result in
             // then
@@ -35,12 +35,12 @@ class NetworkManagerTests: XCTestCase {
     
     func test_success_loadNowPlayingList메서드_성공하면_데이터반환() {
         // give
-        let url = NowPlayingListAPI.nowplaying.makeURL()!
+        let url = NowPlayingListAPI.nowplaying(1).makeURL()!
         // when
-        managerSUT.loadNowPlayingList(url: url) { movies in
+        managerSUT.parseRequestedData(url: url, type: Page.self) { page in
             // then
-            print("test_success_requestData메서드_성공하면_데이터반환 - \(movies.count)")
-            XCTAssertFalse(movies.isEmpty)
+            print("test_success_requestData메서드_성공하면_데이터반환 - \(page.results.count)")
+            XCTAssertFalse(page.results.isEmpty)
         }
     }
     

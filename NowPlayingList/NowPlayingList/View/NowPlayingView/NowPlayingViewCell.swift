@@ -8,26 +8,26 @@
 import UIKit
 
 final class NowPlayingViewCell: UICollectionViewCell {
-    var movieThumbnailImageView: UIImageView = {
+    private var posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
-    var movieTitleLabel: UILabel = {
+    private var movieTitleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
         label.font = .preferredFont(forTextStyle: .headline)
         label.textColor = .label
         return label
     }()
-    var movieRatedLabel: UILabel = {
+    private var movieRatedLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
         label.font = .preferredFont(forTextStyle: .subheadline)
         label.textColor = .green
         return label
     }()
-    let cellStackView: UIStackView = {
+    private let cellStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
@@ -46,16 +46,16 @@ final class NowPlayingViewCell: UICollectionViewCell {
     }
     
     override func prepareForReuse() {
-        movieThumbnailImageView.image = nil
-        movieTitleLabel.text = ""
-        movieRatedLabel.text = ""
+        posterImageView.image = nil
+        movieTitleLabel.text = Strings.emptyString
+        movieRatedLabel.text = Strings.emptyString
     }
 }
 
 // MARK: -- Custom Methods
 extension NowPlayingViewCell {
-    func setUpCellLayout() {
-        cellStackView.addArrangedSubview(movieThumbnailImageView)
+    private func setUpCellLayout() {
+        cellStackView.addArrangedSubview(posterImageView)
         cellStackView.addArrangedSubview(movieTitleLabel)
         cellStackView.addArrangedSubview(movieRatedLabel)
         contentView.addSubview(cellStackView)
@@ -65,13 +65,17 @@ extension NowPlayingViewCell {
         cellStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         cellStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
     }
-    
-    func configureData(title: String, rated: Double) {
-        movieTitleLabel.text = title
-        movieRatedLabel.text = "★" + "\(rated)"
+}
+
+extension NowPlayingViewCell: Configurable {
+    func configureData<T>(_ data: T) {
+        guard let movie = data as? Movie else { return }
+        
+        movieTitleLabel.text = movie.title
+        movieRatedLabel.text = Strings.starText + "\(movie.rated)"
     }
     
     func configureImage(_ image: UIImage) {
-        movieThumbnailImageView.image = image
+        posterImageView.image = image
     }
 }

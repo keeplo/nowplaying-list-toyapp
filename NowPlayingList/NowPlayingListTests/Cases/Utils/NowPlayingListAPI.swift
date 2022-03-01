@@ -15,11 +15,11 @@ class NowPlayingListAPITests: XCTestCase {
         let stringURL = "https://api.themoviedb.org/3/movie/now_playing?api_key=c496a1635ef74bb8ac4fe2376d400404&language=en-US&page=1"
         let giveURL = URL(string: stringURL)
         // when
-        let testURL = NowPlayingListAPI.nowplaying.makeURL()
+        let testURL = NowPlayingListAPI.nowplaying(1).makeURL()!
         // then
-        XCTAssertEqual(giveURL?.baseURL, testURL?.baseURL)
-        XCTAssertEqual(giveURL?.pathComponents, testURL?.pathComponents)
-        XCTAssertEqual(giveURL?.scheme, testURL?.scheme)
+        XCTAssertEqual(giveURL?.baseURL, testURL.baseURL)
+        XCTAssertEqual(giveURL?.pathComponents, testURL.pathComponents)
+        XCTAssertEqual(giveURL?.scheme, testURL.scheme)
     }
     
 }

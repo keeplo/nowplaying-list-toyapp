@@ -7,18 +7,17 @@
 
 import UIKit
 
-class MovieDetailViewController: UIViewController {
+final class MovieDetailViewController: UIViewController {
     
     private var seletedMovie: Movie?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         let test = UILabel()
-        view.backgroundColor = .black // 배경색
         view.addSubview(test)
-        test.text = seletedMovie?.title ?? "x"
-        test.textColor = .white
+        test.text = seletedMovie?.title
+        test.textColor = .label
         test.translatesAutoresizingMaskIntoConstraints = false
         test.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         test.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
@@ -26,7 +25,7 @@ class MovieDetailViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        view.backgroundColor = .systemBackground
     }
     
     static func updateModel(by movie: Movie) -> MovieDetailViewController? {

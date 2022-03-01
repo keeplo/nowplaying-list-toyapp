@@ -1,5 +1,5 @@
 //
-//  NowPlayingViewDataSource.swift
+//  NowPlayingViewModel.swift
 //  NowPlayingList
 //
 //  Created by Yongwoo Marco on 2022/02/17.
@@ -9,49 +9,42 @@ import Foundation
 import UIKit
 
 protocol NowPlayingViewModel {
-    func loadNowPlayingList()
+    func fetchNowPlayingList()
 }
 
-class NowPlayingViewDataSource: NSObject {
+final class NowPlayingViewModelImpl: NSObject, DecodeRequestable {
     typealias ChangedListCompletion = () -> Void
     typealias SelectedItmeCompletion = (Movie) -> Void
     
     private var changedListCompletion: ChangedListCompletion?
     private var selectedItmeCompletion: SelectedItmeCompletion?
     
-    private let networkManager: NowPlayingListNetworkManager
-    private var lastPage: Int = 1
-    private var totalPage: Int = 0
+    private var page: (last: Int, total: Int) = (1, 0)
     private var movies: [Movie] = [] {
-        didSet {
-            changedListCompletion?()
-        }
+        didSet { changedListCompletion?() }
     }
     
-    init(networkManager: NowPlayingListNetworkManager,
-         changedListCompletion: @escaping ChangedListCompletion,
+    init(changedListCompletion: @escaping ChangedListCompletion,
          selectedItmeCompletion: @escaping SelectedItmeCompletion) {
-        self.networkManager = networkManager
         self.changedListCompletion = changedListCompletion
         self.selectedItmeCompletion = selectedItmeCompletion
     }
 }
 
-extension NowPlayingViewDataSource: NowPlayingViewModel {
-    func loadNowPlayingList() {
-        guard let url = NowPlayingListAPI.nowplaying(lastPage).makeURL() else {
+extension NowPlayingViewModelImpl: NowPlayingViewModel{
+    func fetchNowPlayingList() {
+        guard let url = NowPlayingListAPI.nowplaying(page.last).makeURL() else {
             NSLog("\(#function) - URL 생성 실패")
             return
         }
-        networkManager.loadNowPlayingList(url: url) { page in
+        parseRequestedData(url: url, type: Page.self) { page in
             self.movies.append(contentsOf: page.results)
-            self.lastPage = page.page
-            self.totalPage = page.totalPages
+            self.page = (page.page, page.totalPages)
         }
     }
 }
 
-extension NowPlayingViewDataSource: UICollectionViewDataSource {
+extension NowPlayingViewModelImpl: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return movies.count
     }
@@ -62,25 +55,20 @@ extension NowPlayingViewDataSource: UICollectionViewDataSource {
         }
         
         let movie = movies[indexPath.item]
-        let nsPath = NSString(string: movie.posterPath)
-        cell.configureData(title: movie.title, rated: movie.rated)
+        cell.configureData(movie)
         
+        guard let posterPath = movie.posterPath else { return cell }
+        let nsPath = NSString(string: posterPath)
         if let cachedImage = ImageCacheManager.shared.object(forKey: nsPath) {
             cell.configureImage(cachedImage)
         } else {
-            DispatchQueue.global().async {
-                guard let imageURL = NowPlayingListAPI.makeImageURL(movie.posterPath) else {
-                    NSLog("\(#function) - 포스터 URL 생성 실패")
-                    return
-                }
-                if let imageData = NSData(contentsOf: imageURL),
-                    let image = UIImage(data: Data(imageData)) {
-                    ImageCacheManager.shared.setObject(image, forKey: nsPath)
-                    DispatchQueue.main.async {
-                        if indexPath == collectionView.indexPath(for: cell) {
-                            cell.configureImage(image)
-                        }
-                    }
+            guard let imageURL = NowPlayingListAPI.makeImageURL(posterPath) else {
+                NSLog("\(#function) - 포스터 URL 생성 실패")
+                return cell
+            }
+            ImageCacheManager.loadImage(url: imageURL, path: nsPath) { image in
+                if indexPath == collectionView.indexPath(for: cell) {
+                    cell.configureImage(image)
                 }
             }
         }
@@ -89,11 +77,11 @@ extension NowPlayingViewDataSource: UICollectionViewDataSource {
     }
 }
 
-extension NowPlayingViewDataSource: UICollectionViewDelegate {
+extension NowPlayingViewModelImpl: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if lastPage < totalPage, indexPath.item == (movies.count / 4) {
-            lastPage += 1
-            loadNowPlayingList()
+        if page.last < page.total, indexPath.item == (movies.count / 4) {
+            page.last += 1
+            fetchNowPlayingList()
         }
     }
     
@@ -103,7 +91,7 @@ extension NowPlayingViewDataSource: UICollectionViewDelegate {
     }
 }
 
-extension NowPlayingViewDataSource: UICollectionViewDelegateFlowLayout {
+extension NowPlayingViewModelImpl: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = UIScreen.main.bounds.width
         let itemPerRow: CGFloat = 2

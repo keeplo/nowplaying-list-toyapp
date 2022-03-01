@@ -8,7 +8,7 @@
 import XCTest
 @testable import NowPlayingList
 
-struct MockNetworkManager: NetworkManager {
+struct MockDecodeRequestable: DecodeRequestable {
     var isSuccess: Bool
     
     func requestData(with url: URL, _ completion: @escaping (Result<Data, Error>) -> Void) {
@@ -17,5 +17,9 @@ struct MockNetworkManager: NetworkManager {
         } else {
             completion(.failure(NSError()))
         }
+    }
+    
+    func parseRequestedData<T: Decodable>(url: URL, type: T.Type, _ completion: @escaping (T) -> Void) {
+        
     }
 }

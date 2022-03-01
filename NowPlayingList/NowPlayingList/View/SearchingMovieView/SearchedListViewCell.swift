@@ -8,34 +8,34 @@
 import UIKit
 
 final class SearchedListViewCell: UITableViewCell {
-    var posterImageView: UIImageView = {
+    private var posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-    var movieTitleLabel: UILabel = {
+    private var movieTitleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
         label.font = .preferredFont(forTextStyle: .headline)
         label.textColor = .label
         return label
     }()
-    var movieDateLabel: UILabel = {
+    private var movieDateLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
         label.font = .preferredFont(forTextStyle: .subheadline)
         label.textColor = .label
         return label
     }()
-    var movieRatedLabel: UILabel = {
+    private var movieRatedLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
         label.font = .preferredFont(forTextStyle: .subheadline)
         label.textColor = .label
         return label
     }()
-    let labelsStackView: UIStackView = {
+    private let labelsStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -56,14 +56,14 @@ final class SearchedListViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         posterImageView.image = nil
-        movieTitleLabel.text = ""
-        movieRatedLabel.text = ""
+        movieTitleLabel.text = Strings.emptyString
+        movieRatedLabel.text = Strings.emptyString
     }
 }
 
 // MARK: -- Custom Methods
 extension SearchedListViewCell {
-    func setUpCellLayout() {
+    private func setUpCellLayout() {
         contentView.addSubview(posterImageView)
     
         let height = UIScreen.main.bounds.height / 5 - (CGFloat.padding * 4)
@@ -88,11 +88,15 @@ extension SearchedListViewCell {
         labelsStackView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor,
                                                 constant: CGFloat.padding * 2).isActive = true
     }
-    
-    func configureData(title: String, date: String?, rated: Double) {
-        movieTitleLabel.text = title
-        movieDateLabel.text = date
-        movieRatedLabel.text = "★" + "\(rated)"
+}
+
+extension SearchedListViewCell: Configurable {
+    func configureData<T>(_ data: T) {
+        guard let movie = data as? Movie else { return }
+        
+        movieTitleLabel.text = movie.title
+        movieDateLabel.text = movie.releaseDate
+        movieRatedLabel.text = Strings.starText + "\(movie.rated)"
     }
     
     func configureImage(_ image: UIImage) {
