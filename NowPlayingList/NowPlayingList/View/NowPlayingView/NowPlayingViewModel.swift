@@ -44,6 +44,7 @@ extension NowPlayingViewModelImpl: NowPlayingViewModel{
     }
 }
 
+// MARK: -- CollectionView DataSource
 extension NowPlayingViewModelImpl: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return movies.count
@@ -77,6 +78,7 @@ extension NowPlayingViewModelImpl: UICollectionViewDataSource {
     }
 }
 
+// MARK: -- CollectionView Delegate
 extension NowPlayingViewModelImpl: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if page.last < page.total, indexPath.item == (movies.count / 4) {
@@ -91,6 +93,7 @@ extension NowPlayingViewModelImpl: UICollectionViewDelegate {
     }
 }
 
+// MARK: -- CollectionView DelegateFlowLayout
 extension NowPlayingViewModelImpl: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = UIScreen.main.bounds.width

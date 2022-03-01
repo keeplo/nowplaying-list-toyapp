@@ -58,7 +58,7 @@ enum NowPlayingListAPI {
     }
 }
 
-// MARK: -- Method
+// MARK: -- Methods
 extension NowPlayingListAPI {
     static func makeImageURL(_ filePath: String) -> URL? {
         let baseURL = "https://image.tmdb.org/t/p/w500/"

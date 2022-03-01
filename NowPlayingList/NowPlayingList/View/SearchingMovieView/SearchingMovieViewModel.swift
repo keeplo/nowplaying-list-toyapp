@@ -67,6 +67,7 @@ extension SearchingMovieViewModelImpl: SearchMovieViewModel {
     }
 }
 
+// MARK: -- TableView DataSource
 extension SearchingMovieViewModelImpl: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch searchResult {
@@ -80,7 +81,8 @@ extension SearchingMovieViewModelImpl: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch searchResult {
         case .emptyResult:
-            return makeEmptyResultCell()
+            let cell = makeEmptyResultCell()
+            return cell
         case .success:
             guard let cell = makeSearchedListCell(tableView: tableView, at: indexPath) else {
                 return UITableViewCell()
@@ -132,6 +134,7 @@ extension SearchingMovieViewModelImpl: UITableViewDataSource {
     }
 }
 
+// MARK: -- TableView Delegate
 extension SearchingMovieViewModelImpl: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if page.last < page.total, indexPath.item == (movies.count / 2) {
@@ -151,6 +154,7 @@ extension SearchingMovieViewModelImpl: UITableViewDelegate {
     }
 }
 
+// MARK: -- SearchBar Delegate
 extension SearchingMovieViewModelImpl: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let inputText = searchBar.text,
@@ -176,6 +180,7 @@ extension SearchingMovieViewModelImpl: UISearchBarDelegate {
     }
 }
 
+// MARK: -- Timer Methods
 extension SearchingMovieViewModelImpl {
     private func startTimer(perform: @escaping () -> Void) {
         if autoSearchTimer != nil { cancelTimer() }
