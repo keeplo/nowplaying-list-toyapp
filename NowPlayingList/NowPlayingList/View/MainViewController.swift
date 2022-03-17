@@ -18,7 +18,8 @@ final class MainViewController: UITabBarController {
     }()
     
     private var searchViewController: UINavigationController = {
-        let viewController = SearchViewController().then {
+        let viewModel = SearchViewModel()
+        let viewController = SearchViewController(viewModel: viewModel).then {
             $0.tabBarItem = UITabBarItem(title: "검색", image: UIImage(systemName: "2.circle.fill"), selectedImage: nil)
         }
         return UINavigationController(rootViewController: viewController)

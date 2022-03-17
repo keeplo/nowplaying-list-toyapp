@@ -9,6 +9,13 @@ import UIKit
 import Then
 import SnapKit
 
+struct SearchedListCellModel {
+    let title: String
+    let date: String
+    let rated: Double
+    let imagePath: String?
+}
+
 final class SearchedListCell: UITableViewCell {
     private var posterImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFill
@@ -75,14 +82,29 @@ final class SearchedListCell: UITableViewCell {
 
 extension SearchedListCell: Configurable {
     func configureData<T>(_ data: T) {
-        guard let movie = data as? Movie else { return }
+        guard let model = data as? SearchedListCellModel else { return }
         
-        movieTitleLabel.text = movie.title
-        movieDateLabel.text = movie.releaseDate
-        movieRatedLabel.text = Strings.starText + "\(movie.rated)"
-    }
-    
-    func configureImage(_ image: UIImage) {
-        posterImageView.image = image
+        movieTitleLabel.text = model.title
+        movieDateLabel.text = model.date
+        movieRatedLabel.text = Strings.starText + "\(model.rated)"
+        
+        // 이미지 추가
+        
+//        guard let posterPath = movie.posterPath else { return cell }
+//        let nsPath = NSString(string: posterPath)
+//        if let cachedImage = ImageCacheManager.shared.object(forKey: nsPath) {
+//            cell.configureImage(cachedImage)
+//        } else {
+//            guard let imageURL = NowPlayingListAPI.makeImageURL(posterPath) else {
+//                NSLog("\(#function) - 포스터 URL 생성 실패")
+//                return cell
+//            }
+//            ImageCacheManager.loadImage(url: imageURL, path: nsPath) { image in
+//                if indexPath == tableView.indexPath(for: cell) {
+//                    cell.configureImage(image)
+//                }
+//            }
+//        }
+//        posterImageView.image = image
     }
 }
