@@ -84,8 +84,12 @@ extension HomeViewController: HomeViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let seletedMovie = self.viewModel.didSelectedItemAt(indexPath)
-        self.showDetailView(with: seletedMovie)
+        if let seletedMovie = self.viewModel.didSelectedItemAt(indexPath) {
+            self.showDetailView(with: seletedMovie)
+        } else {
+            print("\(#function) - 선택된 데이터 불러오기 실패")
+            return
+        }
     }
 }
 

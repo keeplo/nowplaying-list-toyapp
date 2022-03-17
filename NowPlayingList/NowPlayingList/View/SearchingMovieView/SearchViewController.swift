@@ -108,8 +108,12 @@ extension SearchViewController: SearchViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedMovie = self.viewModel.didSelectRowAt(at: indexPath)
-        self.showDetailView(with: selectedMovie)
+        if let seletedMovie = self.viewModel.didSelectRowAt(indexPath) {
+            self.showDetailView(with: seletedMovie)
+        } else {
+            print("\(#function) - 선택된 데이터 불러오기 실패")
+            return
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

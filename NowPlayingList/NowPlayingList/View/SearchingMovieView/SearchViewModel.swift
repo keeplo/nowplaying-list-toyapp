@@ -9,15 +9,15 @@ import Foundation
 
 protocol SearchViewModelType {
     associatedtype Item
-    func requestSearchMovie(of text: String)
-    func resetDataSource()
-    
+
     func numberOfRowsInSection(_ section: Int) -> Int
     func cellModel(at indexPath: IndexPath) -> Item?
     func willDisplay(forRowAt indexPath: IndexPath)
-    func didSelectRowAt(at indexPath: IndexPath) -> Movie
-    
+    func didSelectRowAt(_ indexPath: IndexPath) -> Movie?
     func cellHeightType() -> SearchViewModel.SearchResult
+    
+    func requestSearchMovie(of text: String)
+    func resetDataSource()
 }
 
 final class SearchViewModel: NSObject, DecodeRequestable {
@@ -82,7 +82,7 @@ extension SearchViewModel: SearchViewModelType {
         case .emptyResult:
             return .emptyCell
         case .success:
-            let movie = self.movies[indexPath.row]
+            guard let movie = self.movies[safe: indexPath.row] else { return nil }
             return .cell(SearchedListCellModel(title: movie.title,
                                                date: movie.releaseDate, rated: movie.rated,
                                                imagePath: movie.posterPath))
@@ -96,8 +96,9 @@ extension SearchViewModel: SearchViewModelType {
         }
     }
     
-    func didSelectRowAt(at indexPath: IndexPath) -> Movie {
-        return self.movies[indexPath.row]
+    func didSelectRowAt(_ indexPath: IndexPath) -> Movie? {
+        guard let movie = self.movies[safe: indexPath.row] else { return nil }
+        return movie
     }
     
     func cellHeightType() -> SearchResult {

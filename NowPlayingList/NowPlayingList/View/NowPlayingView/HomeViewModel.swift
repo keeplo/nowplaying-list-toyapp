@@ -11,8 +11,9 @@ protocol HomeViewModelType {
     associatedtype Item
     func numberOfItemsInSection(_ section: Int) -> Int
     func cellModel(at indexPath: IndexPath) -> Item?
-    func didSelectedItemAt(_ indexPath: IndexPath) -> Movie
+    func didSelectedItemAt(_ indexPath: IndexPath) -> Movie?
     func willDisplay(forItemAt: IndexPath)
+    
     func fetchNowPlayingList()
 }
 
@@ -38,15 +39,16 @@ extension HomeViewModel: HomeViewModelType{
     }
     
     func cellModel(at indexPath: IndexPath) -> Item? {
-        let movie = self.movies[indexPath.item]
+        guard let movie = self.movies[safe: indexPath.item] else { return nil }
         return .cell(NowPlayingListCellModel(title: movie.title,
                                              rated: movie.rated,
                                              imagePath: movie.posterPath))
     }
     
     // MARK: - Delegate
-    func didSelectedItemAt(_ indexPath: IndexPath) -> Movie {
-        return self.movies[indexPath.row]
+    func didSelectedItemAt(_ indexPath: IndexPath) -> Movie? {
+        guard let movie = self.movies[safe: indexPath.row] else { return nil }
+        return movie
     }
     
     func willDisplay(forItemAt indexPath: IndexPath) {
