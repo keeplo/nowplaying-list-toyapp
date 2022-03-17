@@ -14,6 +14,7 @@ protocol HomeViewModelEvent: AnyObject {
 }
 
 final class HomeViewController: UIViewController, CanShowMovieDetailView {
+    private let navigationView = NavigationView(frame: .zero)
     private let homeView = HomeView(frame: .zero)
     private var viewModel: HomeViewModel
     
@@ -32,23 +33,37 @@ final class HomeViewController: UIViewController, CanShowMovieDetailView {
         
         self.setupLayout()
         self.setupAttributes()
-        
-        self.navigationController?.navigationBar.topItem?.title = Strings.Navigation.nowplaying.description
     }
      
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
         self.viewModel.fetchNowPlayingList()
     }
     
     private func setupLayout() {
+        self.view.addSubview(self.navigationView)
+        self.navigationView.snp.makeConstraints { make in
+            make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(66)
+        }
+        
         self.view.addSubview(self.homeView)
         self.homeView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.equalTo(self.navigationView.snp.bottom)
+            make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
+            make.leading.trailing.equalToSuperview()
         }
     }
     
     private func setupAttributes() {
+        self.navigationView.do {
+            $0.configure(title: Strings.Navigation.nowplaying.description)
+        }
+        
         self.homeView.do {
             $0.delegate = self
             $0.dataSource = self

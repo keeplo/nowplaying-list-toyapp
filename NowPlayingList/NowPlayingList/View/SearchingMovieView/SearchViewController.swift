@@ -14,6 +14,7 @@ protocol SearchViewModelEvent: AnyObject {
 }
 
 final class SearchViewController: UIViewController, CanShowMovieDetailView {
+    private let navigationView = NavigationView(frame: .zero)
     private let searchView = SearchView(frame: .zero)
     private var viewModel: SearchViewModel
     
@@ -25,7 +26,8 @@ final class SearchViewController: UIViewController, CanShowMovieDetailView {
         super.init(nibName: nil, bundle: nil)
     }
     
-    required init?(coder: NSCoder) {
+    required init?(coder:
+                   NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -40,17 +42,31 @@ final class SearchViewController: UIViewController, CanShowMovieDetailView {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        view.backgroundColor = .systemBackground
+        
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     private func setupLayout() {
+        self.view.addSubview(self.navigationView)
+        self.navigationView.snp.makeConstraints { make in
+            make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(66)
+        }
+        
         self.view.addSubview(self.searchView)
         self.searchView.snp.makeConstraints { make in
-            make.edges.equalTo(self.view.safeAreaLayoutGuide)
+            make.top.equalTo(self.navigationView.snp.bottom)
+            make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
+            make.leading.trailing.equalToSuperview()
         }
     }
     
     private func setupAttributes() {
+        self.navigationView.do {
+            $0.configure(title: Strings.Navigation.searching.description)
+        }
+        
         self.searchView.do {
             $0.delegate = self
             $0.dataSource = self
