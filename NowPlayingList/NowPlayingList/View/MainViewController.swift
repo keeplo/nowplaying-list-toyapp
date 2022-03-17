@@ -9,22 +9,22 @@ import UIKit
 
 final class MainViewController: UITabBarController {
     
-    private var nowplayingViewController: UINavigationController = {
-        let viewController = NowPlayingViewController().then {
+    private var homeViewController: UINavigationController = {
+        let viewController = HomeViewController().then {
             $0.tabBarItem = UITabBarItem(title: "홈", image: UIImage(systemName: "1.circle.fill"), selectedImage: nil)
         }
         return UINavigationController(rootViewController: viewController)
     }()
     
-    private var searchingMovieViewController: UINavigationController = {
-        let viewController = SearchingMovieVIewController().then {
+    private var searchViewController: UINavigationController = {
+        let viewController = SearchViewController().then {
             $0.tabBarItem = UITabBarItem(title: "검색", image: UIImage(systemName: "2.circle.fill"), selectedImage: nil)
         }
         return UINavigationController(rootViewController: viewController)
     }()
     
-    private var sortingGenreViewController: UINavigationController = {
-        let viewController = SortingGenreViewController().then {
+    private var genreViewController: UINavigationController = {
+        let viewController = GenreViewController().then {
             $0.tabBarItem = UITabBarItem(title: "장르", image: UIImage(systemName: "3.circle.fill"), selectedImage: nil)
         }
         return UINavigationController(rootViewController: viewController)
@@ -47,9 +47,9 @@ final class MainViewController: UITabBarController {
     
     private func setupViewControllers() {
         let viewControllers = [
-            self.nowplayingViewController,
-            self.searchingMovieViewController,
-            self.sortingGenreViewController
+            self.homeViewController,
+            self.searchViewController,
+            self.genreViewController
         ]
         
         self.setViewControllers(viewControllers, animated: false)

@@ -1,5 +1,5 @@
 //
-//  SortingGenreViewController.swift
+//  DetailViewController.swift
 //  NowPlayingList
 //
 //  Created by Yongwoo Marco on 2022/02/25.
@@ -9,8 +9,15 @@ import UIKit
 import Then
 import SnapKit
 
-final class SortingGenreViewController: UIViewController {
+final class DetailViewController: UIViewController {
     
+    static func updateModel(by movie: Movie) -> DetailViewController? {
+        let vcInstance = DetailViewController()
+        vcInstance.seletedMovie = movie
+        return vcInstance
+    }
+    
+    private var seletedMovie: Movie?
     private let dummyGuideLabel = UILabel(frame: .zero)
 
     override func viewDidLoad() {

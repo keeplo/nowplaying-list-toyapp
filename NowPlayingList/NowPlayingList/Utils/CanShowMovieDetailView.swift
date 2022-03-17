@@ -14,7 +14,7 @@ protocol CanShowMovieDetailView {
 
 extension CanShowMovieDetailView {
     func showDetailView(with movie: Movie) {
-        if let detailVC = MovieDetailViewController.updateModel(by: movie) {
+        if let detailVC = DetailViewController.updateModel(by: movie) {
             self.navigationController?.pushViewController(detailVC, animated: false)
         } else {
             NSLog("\(#function) - MovieDetailViewController 인스턴스 생성실패")

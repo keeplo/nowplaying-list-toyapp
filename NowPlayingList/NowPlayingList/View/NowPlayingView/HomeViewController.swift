@@ -1,5 +1,5 @@
 //
-//  MainListViewController.swift
+//  HomeViewController.swift
 //  NowPlayingList
 //
 //  Created by Yongwoo Marco on 2022/02/15.
@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class NowPlayingViewController: UIViewController, CanShowMovieDetailView {
+final class HomeViewController: UIViewController, CanShowMovieDetailView {
     var navigation: UINavigationController?
     private var viewModel: NowPlayingViewModelImpl?
     private var collectionView: UICollectionView!

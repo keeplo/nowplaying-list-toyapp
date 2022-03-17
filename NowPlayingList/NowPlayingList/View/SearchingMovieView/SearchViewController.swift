@@ -1,5 +1,5 @@
 //
-//  SearchingMovieViewController.swift
+//  SearchViewController.swift
 //  NowPlayingList
 //
 //  Created by Yongwoo Marco on 2022/02/25.
@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class SearchingMovieVIewController: UIViewController, CanShowMovieDetailView {
+final class SearchViewController: UIViewController, CanShowMovieDetailView {
     var navigation: UINavigationController?
     private let searchBar = UISearchBar().then {
         $0.placeholder = Strings.SearchBar.placeholder.description
