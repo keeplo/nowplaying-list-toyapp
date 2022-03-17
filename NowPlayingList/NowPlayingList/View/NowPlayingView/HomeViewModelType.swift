@@ -51,7 +51,7 @@ extension HomeViewModel: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NowPlayingListCell.className, for: indexPath) as? NowPlayingListCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NowPlayingViewCell.className, for: indexPath) as? NowPlayingViewCell else {
             return UICollectionViewCell()
         }
         

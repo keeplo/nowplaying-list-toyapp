@@ -16,7 +16,7 @@ final class HomeViewController: UIViewController, CanShowMovieDetailView {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureCollectionView()
-        collectionView.register(NowPlayingViewCell.self)
+        collectionView.register(NowPlayingListCell.self)
         viewModel = HomeViewModel(
             changedListCompletion: {
             DispatchQueue.main.async {

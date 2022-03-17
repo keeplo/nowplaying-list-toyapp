@@ -6,87 +6,70 @@
 //
 
 import UIKit
+import Then
+import SnapKit
 
 final class SearchedListViewCell: UITableViewCell {
-    private var posterImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    private var movieTitleLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .left
-        label.font = .preferredFont(forTextStyle: .headline)
-        label.textColor = .label
-        return label
-    }()
-    private var movieDateLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .left
-        label.font = .preferredFont(forTextStyle: .subheadline)
-        label.textColor = .label
-        return label
-    }()
-    private var movieRatedLabel: UILabel = {
-        let label = UILabel()
-        label.textAlignment = .left
-        label.font = .preferredFont(forTextStyle: .subheadline)
-        label.textColor = .label
-        return label
-    }()
-    private let labelsStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.spacing = 8
-        stackView.distribution = .fillProportionally
-        return stackView
-    }()
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setUpCellLayout()
+    private var posterImageView = UIImageView().then {
+        $0.contentMode = .scaleAspectFill
+    }
+    private var movieTitleLabel = UILabel().then {
+        $0.textAlignment = .left
+        $0.font = .preferredFont(forTextStyle: .headline)
+        $0.textColor = .label
+    }
+    private var movieDateLabel = UILabel().then {
+        $0.textAlignment = .left
+        $0.font = .preferredFont(forTextStyle: .subheadline)
+        $0.textColor = .label
+    }
+    private var movieRatedLabel = UILabel().then {
+        $0.textAlignment = .left
+        $0.font = .preferredFont(forTextStyle: .subheadline)
+        $0.textColor = .label
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setUpCellLayout()
+        setupLayout()
+    }
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupLayout()
+    }
+    
+    private func setupLayout() {
+        self.contentView.addSubview(self.posterImageView)
+    
+        let height = UIScreen.main.bounds.height / 5 - (CGFloat.padding * 4)
+        let width = height * 2 / 3 - (CGFloat.padding * 4)
+        self.posterImageView.snp.makeConstraints { make in
+            make.width.equalTo(width)
+            make.height.equalTo(height)
+            make.top.equalToSuperview().offset(CGFloat.padding * 2)
+            make.leading.equalToSuperview().offset(CGFloat.padding * 4)
+        }
+        
+        let labelsStackView = UIStackView().then {
+            $0.axis = .vertical
+            $0.spacing = 8
+            $0.distribution = .fillProportionally
+            $0.addArrangedSubview(self.movieTitleLabel)
+            $0.addArrangedSubview(self.movieDateLabel)
+            $0.addArrangedSubview(self.movieRatedLabel)
+        }
+        self.contentView.addSubview(labelsStackView)
+        labelsStackView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(CGFloat.padding * 2)
+            make.leading.equalTo(self.posterImageView.snp.trailing).offset(CGFloat.padding * 4)
+            make.trailing.equalToSuperview().offset(-CGFloat.padding * 2)
+        }
     }
     
     override func prepareForReuse() {
         posterImageView.image = nil
         movieTitleLabel.text = Strings.emptyString
         movieRatedLabel.text = Strings.emptyString
-    }
-}
-
-// MARK: -- Custom Methods
-extension SearchedListViewCell {
-    private func setUpCellLayout() {
-        contentView.addSubview(posterImageView)
-    
-        let height = UIScreen.main.bounds.height / 5 - (CGFloat.padding * 4)
-        let width = height * 2 / 3 - (CGFloat.padding * 4)
-        posterImageView.widthAnchor.constraint(equalToConstant: width).isActive = true
-        posterImageView.heightAnchor.constraint(equalToConstant: height).isActive = true
-        
-        posterImageView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor,
-                                             constant: CGFloat.padding * 2).isActive = true
-        posterImageView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor,
-                                               constant: CGFloat.padding * 4).isActive = true
-        
-        labelsStackView.addArrangedSubview(movieTitleLabel)
-        labelsStackView.addArrangedSubview(movieDateLabel)
-        labelsStackView.addArrangedSubview(movieRatedLabel)
-        contentView.addSubview(labelsStackView)
-            
-        labelsStackView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor,
-                                           constant: CGFloat.padding * 2).isActive = true
-        labelsStackView.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor,
-                                               constant: CGFloat.padding * 4).isActive = true
-        labelsStackView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor,
-                                                constant: CGFloat.padding * 2).isActive = true
     }
 }
 
