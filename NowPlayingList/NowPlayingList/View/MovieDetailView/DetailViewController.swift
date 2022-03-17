@@ -42,7 +42,7 @@ final class DetailViewController: UIViewController {
         }
         
         self.dummyGuideLabel.do {
-            $0.text = self.className
+            $0.text = seletedMovie?.title ?? self.className
             $0.textColor = .label
         }
     }
