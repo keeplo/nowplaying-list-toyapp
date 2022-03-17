@@ -9,5 +9,4 @@ import UIKit
 
 protocol Configurable {
     func configureData<T>(_ data: T)
-    func configureImage(_ image: UIImage)
 }

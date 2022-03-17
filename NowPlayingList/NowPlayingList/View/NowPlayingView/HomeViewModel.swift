@@ -9,29 +9,52 @@ import Foundation
 import UIKit
 
 protocol HomeViewModelType {
+    associatedtype Item
+    func numberOfItemsInSection(_ section: Int) -> Int
+    func cellModel(at indexPath: IndexPath) -> Item?
+    func didSelectedItemAt(_ indexPath: IndexPath) -> Movie
+    func willDisplay(_ collectionView: UICollectionView, _ cell: UICollectionViewCell, forItemAt: IndexPath)
     func fetchNowPlayingList()
 }
 
 final class HomeViewModel: NSObject, DecodeRequestable {
-    typealias ChangedListCompletion = () -> Void
-    typealias SelectedItmeCompletion = (Movie) -> Void
     
-    private var changedListCompletion: ChangedListCompletion?
-    private var selectedItmeCompletion: SelectedItmeCompletion?
-    
-    private var page: (last: Int, total: Int) = (1, 0)
-    private var movies: [Movie] = [] {
-        didSet { changedListCompletion?() }
+    enum Item {
+        case cell(NowPlayingListCellModel)
     }
     
-    init(changedListCompletion: @escaping ChangedListCompletion,
-         selectedItmeCompletion: @escaping SelectedItmeCompletion) {
-        self.changedListCompletion = changedListCompletion
-        self.selectedItmeCompletion = selectedItmeCompletion
+    weak var delegate: HomeViewModelEvent?
+    private var page: (last: Int, total: Int) = (1, 0)
+    private var movies: [Movie] = [] {
+        didSet {
+            self.delegate?.reloadData()
+        }
     }
 }
 
 extension HomeViewModel: HomeViewModelType{
+    // MARK: - DataSource
+    func numberOfItemsInSection(_ section: Int) -> Int {
+        return self.movies.count
+    }
+    
+    func cellModel(at indexPath: IndexPath) -> Item? {
+        let movie = self.movies[indexPath.item]
+        return .cell(NowPlayingListCellModel(title: movie.title, rated: movie.rated, imagePath: movie.posterPath))
+    }
+    
+    // MARK: - Delegate
+    func didSelectedItemAt(_ indexPath: IndexPath) -> Movie {
+        return self.movies[indexPath.row]
+    }
+    
+    func willDisplay(_ collectionView: UICollectionView, _ cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if page.last < page.total, indexPath.item == (self.movies.count / 4) {
+            page.last += 1
+            self.fetchNowPlayingList()
+        }
+    }
+    
     func fetchNowPlayingList() {
         guard let url = NowPlayingListAPI.nowplaying(page.last).makeURL() else {
             NSLog("\(#function) - URL 생성 실패")
@@ -41,73 +64,5 @@ extension HomeViewModel: HomeViewModelType{
             self.movies.append(contentsOf: page.results)
             self.page = (page.page, page.totalPages)
         }
-    }
-}
-
-// MARK: -- CollectionView DataSource
-extension HomeViewModel: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return movies.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NowPlayingListCell.className, for: indexPath) as? NowPlayingListCell else {
-            return UICollectionViewCell()
-        }
-        
-        let movie = movies[indexPath.item]
-        cell.configureData(movie)
-        
-        guard let posterPath = movie.posterPath else { return cell }
-        let nsPath = NSString(string: posterPath)
-        if let cachedImage = ImageCacheManager.shared.object(forKey: nsPath) {
-            cell.configureImage(cachedImage)
-        } else {
-            guard let imageURL = NowPlayingListAPI.makeImageURL(posterPath) else {
-                NSLog("\(#function) - 포스터 URL 생성 실패")
-                return cell
-            }
-            ImageCacheManager.loadImage(url: imageURL, path: nsPath) { image in
-                if indexPath == collectionView.indexPath(for: cell) {
-                    cell.configureImage(image)
-                }
-            }
-        }
-        
-        return cell
-    }
-}
-
-// MARK: -- CollectionView Delegate
-extension HomeViewModel: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if page.last < page.total, indexPath.item == (movies.count / 4) {
-            page.last += 1
-            fetchNowPlayingList()
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let seletedMovie = movies[indexPath.item]
-        selectedItmeCompletion?(seletedMovie)
-    }
-}
-
-// MARK: -- CollectionView DelegateFlowLayout
-extension HomeViewModel: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = UIScreen.main.bounds.width
-        let itemPerRow: CGFloat = 2
-        let itemRate:CGFloat = 2/3
-        let padding: CGFloat = 20
-        
-        let cellWidth = (width - padding * 2) / itemPerRow
-        let cellHeight = (cellWidth / itemRate) + padding + padding
-                
-        return CGSize(width: cellWidth, height: cellHeight)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     }
 }
