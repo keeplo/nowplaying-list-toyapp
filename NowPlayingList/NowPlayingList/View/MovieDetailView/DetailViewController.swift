@@ -12,7 +12,9 @@ import SnapKit
 final class DetailViewController: UIViewController {
     
     static func updateModel(by movie: Movie) -> DetailViewController? {
-        let vcInstance = DetailViewController()
+        let vcInstance = DetailViewController().then {
+            $0.hidesBottomBarWhenPushed = true
+        }
         vcInstance.seletedMovie = movie
         return vcInstance
     }
