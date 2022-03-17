@@ -9,12 +9,12 @@ import XCTest
 @testable import NowPlayingList
 
 class NetworkManagerTests: XCTestCase {
-    var managerSUT: NowPlayingViewModelImpl!
+    var managerSUT: HomeViewModel!
     var mockSUT: MockDecodeRequestable!
     
     override func setUp() {
          super.setUp()
-        managerSUT = NowPlayingViewModelImpl(changedListCompletion: {}, selectedItmeCompletion: { _ in })
+        managerSUT = HomeViewModel(changedListCompletion: {}, selectedItmeCompletion: { _ in })
     }
     
     func test_success_requestData메서드() {

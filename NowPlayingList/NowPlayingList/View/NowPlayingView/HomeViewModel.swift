@@ -1,5 +1,5 @@
 //
-//  NowPlayingViewModel.swift
+//  HomeViewModel.swift
 //  NowPlayingList
 //
 //  Created by Yongwoo Marco on 2022/02/17.
@@ -8,11 +8,11 @@
 import Foundation
 import UIKit
 
-protocol NowPlayingViewModel {
+protocol HomeViewModelType {
     func fetchNowPlayingList()
 }
 
-final class NowPlayingViewModelImpl: NSObject, DecodeRequestable {
+final class HomeViewModel: NSObject, DecodeRequestable {
     typealias ChangedListCompletion = () -> Void
     typealias SelectedItmeCompletion = (Movie) -> Void
     
@@ -31,7 +31,7 @@ final class NowPlayingViewModelImpl: NSObject, DecodeRequestable {
     }
 }
 
-extension NowPlayingViewModelImpl: NowPlayingViewModel{
+extension HomeViewModel: HomeViewModelType{
     func fetchNowPlayingList() {
         guard let url = NowPlayingListAPI.nowplaying(page.last).makeURL() else {
             NSLog("\(#function) - URL 생성 실패")
@@ -45,7 +45,7 @@ extension NowPlayingViewModelImpl: NowPlayingViewModel{
 }
 
 // MARK: -- CollectionView DataSource
-extension NowPlayingViewModelImpl: UICollectionViewDataSource {
+extension HomeViewModel: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return movies.count
     }
@@ -79,7 +79,7 @@ extension NowPlayingViewModelImpl: UICollectionViewDataSource {
 }
 
 // MARK: -- CollectionView Delegate
-extension NowPlayingViewModelImpl: UICollectionViewDelegate {
+extension HomeViewModel: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if page.last < page.total, indexPath.item == (movies.count / 4) {
             page.last += 1
@@ -94,7 +94,7 @@ extension NowPlayingViewModelImpl: UICollectionViewDelegate {
 }
 
 // MARK: -- CollectionView DelegateFlowLayout
-extension NowPlayingViewModelImpl: UICollectionViewDelegateFlowLayout {
+extension HomeViewModel: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = UIScreen.main.bounds.width
         let itemPerRow: CGFloat = 2

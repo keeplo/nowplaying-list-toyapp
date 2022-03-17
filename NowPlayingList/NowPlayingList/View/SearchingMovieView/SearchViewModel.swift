@@ -1,5 +1,5 @@
 //
-//  SearchingMovieViewModelImpl.swift
+//  SearchViewModel.swift
 //  NowPlayingList
 //
 //  Created by Yongwoo Marco on 2022/02/25.
@@ -7,12 +7,12 @@
 
 import UIKit
 
-protocol SearchMovieViewModel {
+protocol SearchViewModelType {
     func requestSearchMovie(of text: String)
     func resetDataSource()
 }
 
-final class SearchingMovieViewModelImpl: NSObject, DecodeRequestable {
+final class SearchViewModel: NSObject, DecodeRequestable {
     typealias ChangedListCompletion = () -> Void
     typealias SelectedItmeCompletion = (Movie) -> Void
     
@@ -41,7 +41,7 @@ final class SearchingMovieViewModelImpl: NSObject, DecodeRequestable {
     }
 }
 
-extension SearchingMovieViewModelImpl: SearchMovieViewModel {
+extension SearchViewModel: SearchViewModelType {
     func requestSearchMovie(of text: String = Strings.emptyString) {
         if !text.isEmpty { currentSearchWord = text }
         guard let url = NowPlayingListAPI.searching(text, page.last).makeURL() else {
@@ -68,7 +68,7 @@ extension SearchingMovieViewModelImpl: SearchMovieViewModel {
 }
 
 // MARK: -- TableView DataSource
-extension SearchingMovieViewModelImpl: UITableViewDataSource {
+extension SearchViewModel: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch searchResult {
         case .emptyResult:
@@ -135,7 +135,7 @@ extension SearchingMovieViewModelImpl: UITableViewDataSource {
 }
 
 // MARK: -- TableView Delegate
-extension SearchingMovieViewModelImpl: UITableViewDelegate {
+extension SearchViewModel: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if page.last < page.total, indexPath.item == (movies.count / 2) {
             page.last += 1
@@ -155,7 +155,7 @@ extension SearchingMovieViewModelImpl: UITableViewDelegate {
 }
 
 // MARK: -- SearchBar Delegate
-extension SearchingMovieViewModelImpl: UISearchBarDelegate {
+extension SearchViewModel: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let inputText = searchBar.text,
               !inputText.isEmpty else {
@@ -181,7 +181,7 @@ extension SearchingMovieViewModelImpl: UISearchBarDelegate {
 }
 
 // MARK: -- Timer Methods
-extension SearchingMovieViewModelImpl {
+extension SearchViewModel {
     private func startTimer(perform: @escaping () -> Void) {
         if autoSearchTimer != nil { cancelTimer() }
         autoSearchTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in

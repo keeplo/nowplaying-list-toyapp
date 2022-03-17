@@ -13,7 +13,7 @@ final class SearchViewController: UIViewController, CanShowMovieDetailView {
     private let searchBar = UISearchBar().then {
         $0.placeholder = Strings.SearchBar.placeholder.description
     }
-    private var viewModel: SearchingMovieViewModelImpl?
+    private var viewModel: SearchViewModel?
     private var tableView: UITableView!
     
     override func viewDidLoad() {
@@ -21,7 +21,7 @@ final class SearchViewController: UIViewController, CanShowMovieDetailView {
         configureSearchBar()
         configureTableView()
         tableView.register(SearchedListViewCell.self)
-        viewModel = SearchingMovieViewModelImpl(
+        viewModel = SearchViewModel(
             changedListCompletion: {
                 DispatchQueue.main.async {
                     self.tableView.reloadData()

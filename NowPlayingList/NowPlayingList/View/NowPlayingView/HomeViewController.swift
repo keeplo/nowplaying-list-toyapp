@@ -10,14 +10,14 @@ import SnapKit
 
 final class HomeViewController: UIViewController, CanShowMovieDetailView {
     var navigation: UINavigationController?
-    private var viewModel: NowPlayingViewModelImpl?
+    private var viewModel: HomeViewModel?
     private var collectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureCollectionView()
         collectionView.register(NowPlayingViewCell.self)
-        viewModel = NowPlayingViewModelImpl(
+        viewModel = HomeViewModel(
             changedListCompletion: {
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
