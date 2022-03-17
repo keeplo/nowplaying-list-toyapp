@@ -15,7 +15,6 @@
 		A9066EC327C8E2A30037EE11 /* SearchedListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9066EC227C8E2A30037EE11 /* SearchedListCell.swift */; };
 		A908577F27CA4E8200460976 /* JSONDecoder+.swift in Sources */ = {isa = PBXBuildFile; fileRef = A908577E27CA4E8200460976 /* JSONDecoder+.swift */; };
 		A908578527CA59C200460976 /* Configurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A908578427CA59C200460976 /* Configurable.swift */; };
-		A908578727CA5F5A00460976 /* CanShowMovieDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A908578627CA5F5A00460976 /* CanShowMovieDetailView.swift */; };
 		A920982C27BE2D440027953D /* NSObject+.swift in Sources */ = {isa = PBXBuildFile; fileRef = A920982B27BE2D440027953D /* NSObject+.swift */; };
 		A920982F27BE50FF0027953D /* NowPlayingListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A920982E27BE50FF0027953D /* NowPlayingListCell.swift */; };
 		A920983127BE5D680027953D /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A920983027BE5D680027953D /* HomeViewModel.swift */; };
@@ -64,7 +63,6 @@
 		A9066EC227C8E2A30037EE11 /* SearchedListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchedListCell.swift; sourceTree = "<group>"; };
 		A908577E27CA4E8200460976 /* JSONDecoder+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONDecoder+.swift"; sourceTree = "<group>"; };
 		A908578427CA59C200460976 /* Configurable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configurable.swift; sourceTree = "<group>"; };
-		A908578627CA5F5A00460976 /* CanShowMovieDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanShowMovieDetailView.swift; sourceTree = "<group>"; };
 		A920982B27BE2D440027953D /* NSObject+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+.swift"; sourceTree = "<group>"; };
 		A920982E27BE50FF0027953D /* NowPlayingListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingListCell.swift; sourceTree = "<group>"; };
 		A920983027BE5D680027953D /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
@@ -208,7 +206,6 @@
 			children = (
 				A928923127C32CBE0090993E /* DecodeRequestable.swift */,
 				A908578427CA59C200460976 /* Configurable.swift */,
-				A908578627CA5F5A00460976 /* CanShowMovieDetailView.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -480,7 +477,6 @@
 				A908578527CA59C200460976 /* Configurable.swift in Sources */,
 				A920983127BE5D680027953D /* HomeViewModel.swift in Sources */,
 				A9E52E3D27CB77E100A43FC8 /* Strings.swift in Sources */,
-				A908578727CA5F5A00460976 /* CanShowMovieDetailView.swift in Sources */,
 				A9066EBD27C8DEC80037EE11 /* GenreViewController.swift in Sources */,
 				A9997FA927BBB786004519A7 /* AppDelegate.swift in Sources */,
 				A920982F27BE50FF0027953D /* NowPlayingListCell.swift in Sources */,

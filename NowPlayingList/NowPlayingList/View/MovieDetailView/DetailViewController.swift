@@ -9,6 +9,21 @@ import UIKit
 import Then
 import SnapKit
 
+protocol CanShowMovieDetailView {
+    var navigationController: UINavigationController? { get }
+    func showDetailView(with movie: Movie)
+}
+
+extension CanShowMovieDetailView {
+    func showDetailView(with movie: Movie) {
+        if let detailVC = DetailViewController.updateModel(by: movie) {
+            self.navigationController?.pushViewController(detailVC, animated: false)
+        } else {
+            NSLog("\(#function) - MovieDetailViewController 인스턴스 생성실패")
+        }
+    }
+}
+
 final class DetailViewController: UIViewController {
     
     static func updateModel(by movie: Movie) -> DetailViewController? {
