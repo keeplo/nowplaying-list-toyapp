@@ -20,8 +20,7 @@ final class SearchingMovieVIewController: UIViewController, CanShowMovieDetailVi
         super.viewDidLoad()
         configureSearchBar()
         configureTableView()
-        tableView.register(SearchedListViewCell.classForCoder(),
-                           forCellReuseIdentifier: SearchedListViewCell.className)
+        tableView.register(SearchedListViewCell.self)
         viewModel = SearchingMovieViewModelImpl(
             changedListCompletion: {
                 DispatchQueue.main.async {

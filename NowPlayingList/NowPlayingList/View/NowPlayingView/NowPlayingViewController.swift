@@ -16,8 +16,7 @@ final class NowPlayingViewController: UIViewController, CanShowMovieDetailView {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureCollectionView()
-        collectionView.register(NowPlayingViewCell.classForCoder(),
-                                forCellWithReuseIdentifier: NowPlayingViewCell.className)
+        collectionView.register(NowPlayingViewCell.self)
         viewModel = NowPlayingViewModelImpl(
             changedListCompletion: {
             DispatchQueue.main.async {
