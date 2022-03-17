@@ -6,14 +6,13 @@
 //
 
 import Foundation
-import UIKit
 
 protocol HomeViewModelType {
     associatedtype Item
     func numberOfItemsInSection(_ section: Int) -> Int
     func cellModel(at indexPath: IndexPath) -> Item?
     func didSelectedItemAt(_ indexPath: IndexPath) -> Movie
-    func willDisplay(_ collectionView: UICollectionView, _ cell: UICollectionViewCell, forItemAt: IndexPath)
+    func willDisplay(forItemAt: IndexPath)
     func fetchNowPlayingList()
 }
 
@@ -48,7 +47,7 @@ extension HomeViewModel: HomeViewModelType{
         return self.movies[indexPath.row]
     }
     
-    func willDisplay(_ collectionView: UICollectionView, _ cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    func willDisplay(forItemAt indexPath: IndexPath) {
         if page.last < page.total, indexPath.item == (self.movies.count / 4) {
             page.last += 1
             self.fetchNowPlayingList()

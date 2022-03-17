@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Then
 import SnapKit
 
 protocol HomeViewModelEvent: AnyObject {
@@ -79,7 +80,7 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
 
 extension HomeViewController: HomeViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        self.viewModel.willDisplay(collectionView, cell, forItemAt: indexPath)
+        self.viewModel.willDisplay(forItemAt: indexPath)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {

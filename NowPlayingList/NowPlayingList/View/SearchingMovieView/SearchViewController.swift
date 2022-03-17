@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Then
 import SnapKit
 
 protocol SearchViewModelEvent: AnyObject {
@@ -103,7 +104,7 @@ extension SearchViewController: SearchViewDataSource {
 extension SearchViewController: SearchViewDelegate {
     // MARK: - TableView Delegate
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        self.viewModel.willDisplay(tableView, cell, forRowAt: indexPath)
+        self.viewModel.willDisplay(forRowAt: indexPath)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -112,7 +113,12 @@ extension SearchViewController: SearchViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return self.viewModel.cellHeight(tableView)
+        switch self.viewModel.cellHeightType() {
+        case .emptyResult:
+            return self.searchView.bounds.height
+        case .success:
+            return self.searchView.bounds.height / 5
+        }
     }
     
     // MARK: - SearchBar Delegate

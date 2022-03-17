@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import Then
+import SnapKit
 
 struct NowPlayingListCellModel {
     let title: String

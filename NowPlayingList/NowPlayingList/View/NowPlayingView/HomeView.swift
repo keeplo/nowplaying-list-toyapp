@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import Then
+import SnapKit
 
 typealias HomeViewDelegate = UICollectionViewDelegate
 typealias HomeViewDataSource = UICollectionViewDataSource

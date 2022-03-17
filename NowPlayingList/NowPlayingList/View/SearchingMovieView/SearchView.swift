@@ -5,9 +5,9 @@
 //  Created by Yongwoo Marco on 2022/03/17.
 //
 
-import Foundation
-
 import UIKit
+import Then
+import SnapKit
 
 protocol SearchViewDelegate: UITableViewDelegate, UISearchBarDelegate {
     

@@ -5,7 +5,7 @@
 //  Created by Yongwoo Marco on 2022/02/25.
 //
 
-import UIKit
+import Foundation
 
 protocol SearchViewModelType {
     associatedtype Item
@@ -14,11 +14,10 @@ protocol SearchViewModelType {
     
     func numberOfRowsInSection(_ section: Int) -> Int
     func cellModel(at indexPath: IndexPath) -> Item?
-    
-    func willDisplay(_ tableView: UITableView, _ cell: UITableViewCell, forRowAt indexPath: IndexPath)
+    func willDisplay(forRowAt indexPath: IndexPath)
     func didSelectRowAt(at indexPath: IndexPath) -> Movie
     
-    func cellHeight(_ tableView: UITableView) -> CGFloat
+    func cellHeightType() -> SearchViewModel.SearchResult
 }
 
 final class SearchViewModel: NSObject, DecodeRequestable {
@@ -91,7 +90,7 @@ extension SearchViewModel: SearchViewModelType {
         }
     }
     
-    func willDisplay(_ tableView: UITableView, _ cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    func willDisplay(forRowAt indexPath: IndexPath) {
         if page.last < page.total, indexPath.item == (movies.count / 2) {
             page.last += 1
             self.requestSearchMovie()
@@ -102,13 +101,8 @@ extension SearchViewModel: SearchViewModelType {
         return self.movies[indexPath.row]
     }
     
-    func cellHeight(_ tableView: UITableView) -> CGFloat {
-        switch searchResult {
-        case .emptyResult:
-            return tableView.bounds.height
-        case .success:
-            return tableView.bounds.height / 5
-        }
+    func cellHeightType() -> SearchResult {
+        return self.searchResult
     }
 }
 
