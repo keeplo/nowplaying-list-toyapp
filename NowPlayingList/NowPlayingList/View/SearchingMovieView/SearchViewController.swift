@@ -20,7 +20,7 @@ final class SearchViewController: UIViewController, CanShowMovieDetailView {
         super.viewDidLoad()
         configureSearchBar()
         configureTableView()
-        tableView.register(SearchedListViewCell.self)
+        tableView.register(SearchedListCell.self)
         viewModel = SearchViewModel(
             changedListCompletion: {
                 DispatchQueue.main.async {

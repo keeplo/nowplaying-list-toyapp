@@ -1,5 +1,5 @@
 //
-//  SearchedListViewCell.swift
+//  SearchedListCell.swift
 //  NowPlayingList
 //
 //  Created by Yongwoo Marco on 2022/02/25.
@@ -9,7 +9,7 @@ import UIKit
 import Then
 import SnapKit
 
-final class SearchedListViewCell: UITableViewCell {
+final class SearchedListCell: UITableViewCell {
     private var posterImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFill
     }
@@ -73,7 +73,7 @@ final class SearchedListViewCell: UITableViewCell {
     }
 }
 
-extension SearchedListViewCell: Configurable {
+extension SearchedListCell: Configurable {
     func configureData<T>(_ data: T) {
         guard let movie = data as? Movie else { return }
         
