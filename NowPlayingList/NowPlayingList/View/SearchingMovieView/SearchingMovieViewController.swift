@@ -6,14 +6,13 @@
 //
 
 import UIKit
+import SnapKit
 
 final class SearchingMovieVIewController: UIViewController, CanShowMovieDetailView {
     var navigation: UINavigationController?
-    private let searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.placeholder = Strings.SearchBar.placeholder.description
-        return searchBar
-    }()
+    private let searchBar = UISearchBar().then {
+        $0.placeholder = Strings.SearchBar.placeholder.description
+    }
     private var viewModel: SearchingMovieViewModelImpl?
     private var tableView: UITableView!
     
@@ -46,21 +45,21 @@ final class SearchingMovieVIewController: UIViewController, CanShowMovieDetailVi
     }
     
     private func configureSearchBar() {
-        view.addSubview(searchBar)
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        self.view.addSubview(self.searchBar)
+        self.searchBar.snp.makeConstraints { make in
+            make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
+        }
     }
     
     private func configureTableView() {
         tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(tableView)
-    
-        tableView.topAnchor.constraint(equalTo: searchBar.bottomAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
+        self.view.addSubview(self.tableView)
+        self.tableView.snp.makeConstraints { make in
+            make.top.equalTo(self.searchBar.snp.bottom)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
     }
 }

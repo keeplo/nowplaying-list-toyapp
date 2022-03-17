@@ -6,31 +6,42 @@
 //
 
 import UIKit
+import Then
+import SnapKit
 
 final class MovieDetailViewController: UIViewController {
-    
-    private var seletedMovie: Movie?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        let test = UILabel()
-        view.addSubview(test)
-        test.text = seletedMovie?.title
-        test.textColor = .label
-        test.translatesAutoresizingMaskIntoConstraints = false
-        test.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        test.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        view.backgroundColor = .systemBackground
-    }
     
     static func updateModel(by movie: Movie) -> MovieDetailViewController? {
         let vcInstance = MovieDetailViewController()
         vcInstance.seletedMovie = movie
         return vcInstance
+    }
+    
+    private var seletedMovie: Movie?
+    private let dummyGuideLabel = UILabel(frame: .zero)
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.setupLayout()
+        self.setupAttributes()
+    }
+    
+    private func setupLayout() {
+        self.view.addSubview(self.dummyGuideLabel)
+        self.dummyGuideLabel.snp.makeConstraints { make in
+            make.centerX.centerY.equalToSuperview()
+        }
+    }
+    
+    private func setupAttributes() {
+        self.view.do {
+            $0.backgroundColor = .systemBackground
+        }
+        
+        self.dummyGuideLabel.do {
+            $0.text = self.className
+            $0.textColor = .label
+        }
     }
 }

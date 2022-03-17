@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 final class NowPlayingViewController: UIViewController, CanShowMovieDetailView {
     var navigation: UINavigationController?
@@ -42,12 +43,11 @@ final class NowPlayingViewController: UIViewController, CanShowMovieDetailView {
     private func configureCollectionView() {
         collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout.init())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(collectionView)
         
-        collectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        self.view.addSubview(collectionView)
+        self.collectionView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
 }
 
