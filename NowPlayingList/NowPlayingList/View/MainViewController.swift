@@ -10,7 +10,8 @@ import UIKit
 final class MainViewController: UITabBarController {
     
     private var homeViewController: UINavigationController = {
-        let viewController = HomeViewController().then {
+        let viewModel = HomeViewModel()
+        let viewController = HomeViewController(viewModel: viewModel).then {
             $0.tabBarItem = UITabBarItem(title: "홈", image: UIImage(systemName: "1.circle.fill"), selectedImage: nil)
         }
         return UINavigationController(rootViewController: viewController)
@@ -42,6 +43,7 @@ final class MainViewController: UITabBarController {
         self.tabBar.do {
             $0.barStyle = .default
             $0.isTranslucent = false
+            $0.backgroundColor = .systemGroupedBackground
         }
     }
     
