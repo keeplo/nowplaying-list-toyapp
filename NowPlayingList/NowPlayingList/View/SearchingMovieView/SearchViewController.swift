@@ -117,7 +117,7 @@ extension SearchViewController: SearchViewDelegate {
         case .emptyResult:
             return self.searchView.bounds.height
         case .success:
-            return self.searchView.bounds.height / 5
+            return UIScreen.main.bounds.height / 5
         }
     }
     

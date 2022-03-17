@@ -45,19 +45,16 @@ final class SearchViewModel: NSObject, DecodeRequestable {
 
 extension SearchViewModel: SearchViewModelType {
     func requestSearchMovie(of text: String = Strings.emptyString) {
-        if !text.isEmpty { currentSearchWord = text }
-        print(#function)
-        guard let url = NowPlayingListAPI.searching(text, page.last).makeURL() else {
+        if !text.isEmpty { self.currentSearchWord = text }
+        guard let url = NowPlayingListAPI.searching(self.currentSearchWord, page.last).makeURL() else {
             NSLog("\(#function) - URL 생성 실패")
             return
         }
         parseRequestedData(url: url, type: Page.self) { page in
             if page.results.isEmpty {
-                print("empty")
                 self.searchResult = .emptyResult
                 self.movies = []
             } else {
-                print(page.results.count)
                 self.searchResult = .success
                 self.movies.append(contentsOf: page.results)
                 self.page = (page.page, page.totalPages)
