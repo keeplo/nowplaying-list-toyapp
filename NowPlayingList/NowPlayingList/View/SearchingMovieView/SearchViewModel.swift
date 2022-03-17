@@ -86,7 +86,9 @@ extension SearchViewModel: SearchViewModelType {
             return .emptyCell
         case .success:
             let movie = self.movies[indexPath.row]
-            return .cell(SearchedListCellModel(title: movie.title, date: movie.releaseDate, rated: movie.rated, imagePath: movie.posterPath))
+            return .cell(SearchedListCellModel(title: movie.title,
+                                               date: movie.releaseDate, rated: movie.rated,
+                                               imagePath: movie.posterPath))
         }
     }
     

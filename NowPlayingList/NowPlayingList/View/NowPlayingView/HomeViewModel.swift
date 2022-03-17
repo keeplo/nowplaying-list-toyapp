@@ -39,7 +39,9 @@ extension HomeViewModel: HomeViewModelType{
     
     func cellModel(at indexPath: IndexPath) -> Item? {
         let movie = self.movies[indexPath.item]
-        return .cell(NowPlayingListCellModel(title: movie.title, rated: movie.rated, imagePath: movie.posterPath))
+        return .cell(NowPlayingListCellModel(title: movie.title,
+                                             rated: movie.rated,
+                                             imagePath: movie.posterPath))
     }
     
     // MARK: - Delegate

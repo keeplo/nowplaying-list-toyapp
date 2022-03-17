@@ -8,6 +8,7 @@
 import UIKit
 import Then
 import SnapKit
+import Kingfisher
 
 struct NowPlayingListCellModel {
     let title: String
@@ -55,7 +56,7 @@ final class NowPlayingListCell: UICollectionViewCell {
     }
     
     override func prepareForReuse() {
-        posterImageView.image = nil
+        posterImageView.kf.cancelDownloadTask()
         movieTitleLabel.text = Strings.emptyString
         movieRatedLabel.text = Strings.emptyString
     }
@@ -67,21 +68,9 @@ extension NowPlayingListCell: Configurable {
         
         movieTitleLabel.text = model.title
         movieRatedLabel.text = Strings.starText + "\(model.rated)"
-        // 이미지 추가
-//        guard let posterPath = movie.posterPath else { return cell }
-//        let nsPath = NSString(string: posterPath)
-//        if let cachedImage = ImageCacheManager.shared.object(forKey: nsPath) {
-//            cell.configureImage(cachedImage)
-//        } else {
-//            guard let imageURL = NowPlayingListAPI.makeImageURL(posterPath) else {
-//                NSLog("\(#function) - 포스터 URL 생성 실패")
-//                return cell
-//            }
-//            ImageCacheManager.loadImage(url: imageURL, path: nsPath) { image in
-//                if indexPath == collectionView.indexPath(for: cell) {
-//                    cell.configureImage(image)
-//                }
-//            }
-//        }
+        if let path = model.imagePath,
+            let url = NowPlayingListAPI.makeImageURL(path) {
+            posterImageView.kf.setImage(with: url)
+        }
     }
 }

@@ -40,7 +40,6 @@
 		A9997FB527BBB788004519A7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9997FB327BBB788004519A7 /* LaunchScreen.storyboard */; };
 		A9997FC027BBB788004519A7 /* NowPlayingListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9997FBF27BBB788004519A7 /* NowPlayingListTests.swift */; };
 		A9997FD927BBBB88004519A7 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9997FD827BBBB88004519A7 /* MainViewController.swift */; };
-		A9B1C61B27C7983100C264DC /* ImageCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B1C61A27C7983100C264DC /* ImageCacheManager.swift */; };
 		A9E52E3D27CB77E100A43FC8 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E52E3C27CB77E100A43FC8 /* Strings.swift */; };
 /* End PBXBuildFile section */
 
@@ -92,7 +91,6 @@
 		A9997FBB27BBB788004519A7 /* NowPlayingListTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NowPlayingListTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9997FBF27BBB788004519A7 /* NowPlayingListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingListTests.swift; sourceTree = "<group>"; };
 		A9997FD827BBBB88004519A7 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		A9B1C61A27C7983100C264DC /* ImageCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheManager.swift; sourceTree = "<group>"; };
 		A9E52E3C27CB77E100A43FC8 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		CB1322918375A5EB06AA5F7A /* Pods-NowPlayingListTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NowPlayingListTests.debug.xcconfig"; path = "Target Support Files/Pods-NowPlayingListTests/Pods-NowPlayingListTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F3BC72D66B0B2BBE8B8DE27C /* Pods-NowPlayingListTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NowPlayingListTests.release.xcconfig"; path = "Target Support Files/Pods-NowPlayingListTests/Pods-NowPlayingListTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -208,7 +206,6 @@
 				A928923127C32CBE0090993E /* DecodeRequestable.swift */,
 				A908578427CA59C200460976 /* Configurable.swift */,
 				A908578627CA5F5A00460976 /* CanShowMovieDetailView.swift */,
-				A9B1C61A27C7983100C264DC /* ImageCacheManager.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -464,7 +461,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A9066EBF27C8DEF20037EE11 /* SearchViewController.swift in Sources */,
-				A9B1C61B27C7983100C264DC /* ImageCacheManager.swift in Sources */,
 				A9997FAD27BBB786004519A7 /* HomeViewController.swift in Sources */,
 				A998691527E3190900DBA9BD /* HomeView.swift in Sources */,
 				A9066EC327C8E2A30037EE11 /* SearchedListCell.swift in Sources */,

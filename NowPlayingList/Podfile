@@ -7,6 +7,7 @@ target 'NowPlayingList' do
   
   pod 'Then'
   pod 'SnapKit', '~> 5.0.0'
+  pod 'Kingfisher', '~> 7.0'
   # Pods for NowPlayingList
 
   target 'NowPlayingListTests' do
