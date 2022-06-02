@@ -206,6 +206,8 @@
 		A928923027C32C270090993E /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				A9E52E3C27CB77E100A43FC8 /* Strings.swift */,
+				A928923527C34C3D0090993E /* NowPlayingListAPI.swift */,
 				A928923127C32CBE0090993E /* DecodeRequestable.swift */,
 				A908578427CA59C200460976 /* Configurable.swift */,
 				A998691A27E364ED00DBA9BD /* NavigationView.swift */,
@@ -272,8 +274,6 @@
 			children = (
 				A9997FA827BBB786004519A7 /* AppDelegate.swift */,
 				A9997FAA27BBB786004519A7 /* SceneDelegate.swift */,
-				A928923527C34C3D0090993E /* NowPlayingListAPI.swift */,
-				A9E52E3C27CB77E100A43FC8 /* Strings.swift */,
 				A928923027C32C270090993E /* Utils */,
 				A920982A27BE2D300027953D /* Extensions */,
 				A920983227BE5D8C0027953D /* Model */,
