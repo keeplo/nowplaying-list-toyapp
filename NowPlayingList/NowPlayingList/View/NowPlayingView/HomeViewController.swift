@@ -83,7 +83,7 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
         let padding: CGFloat = 20
         
         let cellWidth = (width - padding * 2) / itemPerRow
-        let cellHeight = (cellWidth / itemRate) + padding + padding
+        let cellHeight = (cellWidth / itemRate) + (padding * 2)
                 
         return CGSize(width: cellWidth, height: cellHeight)
     }

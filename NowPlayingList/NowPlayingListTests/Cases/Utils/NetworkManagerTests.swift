@@ -14,7 +14,7 @@ class NetworkManagerTests: XCTestCase {
     
     override func setUp() {
          super.setUp()
-        managerSUT = HomeViewModel(changedListCompletion: {}, selectedItmeCompletion: { _ in })
+        managerSUT = HomeViewModel()
     }
     
     func test_success_requestData메서드() {
