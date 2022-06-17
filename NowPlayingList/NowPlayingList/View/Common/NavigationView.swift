@@ -37,7 +37,7 @@ final class NavigationView: UIView {
     
     private func setupAttributes() {
         self.do {
-            $0.backgroundColor = .systemGroupedBackground
+            $0.backgroundColor = .systemBackground
         }
     }
     
