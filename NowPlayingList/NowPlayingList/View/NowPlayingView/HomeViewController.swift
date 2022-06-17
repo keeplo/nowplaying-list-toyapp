@@ -13,7 +13,7 @@ protocol HomeViewModelEvent: AnyObject {
     func reloadData()
 }
 
-final class HomeViewController: UIViewController, CanShowMovieDetailView {
+final class HomeViewController: UIViewController {
     
     private let navigationView = NavigationView(frame: .zero)
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout()).then {
@@ -25,7 +25,6 @@ final class HomeViewController: UIViewController, CanShowMovieDetailView {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -105,12 +104,7 @@ extension HomeViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let seletedMovie = self.viewModel.didSelectedItemAt(indexPath) {
-            self.showDetailView(with: seletedMovie)
-        } else {
-            print("\(#function) - 선택된 데이터 불러오기 실패")
-            return
-        }
+        self.viewModel.didSelectedItemAt(indexPath)
     }
     
 }

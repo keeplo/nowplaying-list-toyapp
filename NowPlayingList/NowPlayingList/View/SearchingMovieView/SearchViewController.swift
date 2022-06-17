@@ -13,10 +13,12 @@ protocol SearchViewModelEvent: AnyObject {
     func reloadData()
 }
 
-final class SearchViewController: UIViewController, CanShowMovieDetailView {
+final class SearchViewController: UIViewController {
     private let navigationView = NavigationView(frame: .zero)
     private let searchBar = UISearchBar(frame: .zero)
-    private let tableView = UITableView(frame: .zero, style: .plain)
+    private let tableView = UITableView(frame: .zero, style: .plain).then {
+        $0.register(SearchedListCell.self)
+    }
     private var viewModel: SearchViewModel
     
     private var autoSearchTimer: Timer?
@@ -25,7 +27,6 @@ final class SearchViewController: UIViewController, CanShowMovieDetailView {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -55,7 +56,8 @@ final class SearchViewController: UIViewController, CanShowMovieDetailView {
         
         self.view.addSubview(self.searchBar)
         self.searchBar.snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
+            make.top.equalTo(navigationView.snp.bottom)
+            make.leading.trailing.equalToSuperview()
         }
         
         self.view.addSubview(self.tableView)
@@ -69,6 +71,10 @@ final class SearchViewController: UIViewController, CanShowMovieDetailView {
     private func setupAttributes() {
         self.navigationView.do {
             $0.configure(title: Strings.Navigation.searching.description)
+        }
+        
+        self.searchBar.do {
+            $0.delegate = self
         }
         
         self.tableView.do {
@@ -129,12 +135,7 @@ extension SearchViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let seletedMovie = self.viewModel.didSelectRowAt(indexPath) {
-            self.showDetailView(with: seletedMovie)
-        } else {
-            print("\(#function) - 선택된 데이터 불러오기 실패")
-            return
-        }
+        viewModel.didSelectRowAt(indexPath)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -146,7 +147,10 @@ extension SearchViewController: UITableViewDelegate {
         }
     }
     
-    // MARK: - SearchBar Delegate
+}
+
+extension SearchViewController: UISearchBarDelegate {
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         guard let inputText = searchBar.text,
               !inputText.isEmpty else {

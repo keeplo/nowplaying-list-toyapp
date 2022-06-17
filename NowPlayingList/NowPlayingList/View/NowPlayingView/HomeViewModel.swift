@@ -11,13 +11,23 @@ protocol HomeViewModelType {
     associatedtype Item
     func numberOfItemsInSection(_ section: Int) -> Int
     func cellModel(at indexPath: IndexPath) -> Item?
-    func didSelectedItemAt(_ indexPath: IndexPath) -> Movie?
+    func didSelectedItemAt(_ indexPath: IndexPath)
     func willDisplay(forItemAt: IndexPath)
     
     func fetchNowPlayingList()
 }
 
 final class HomeViewModel: NSObject, DecodeRequestable {
+    
+    struct Dependency {
+        let coordinator: SceneCoordinator
+    }
+    
+    private let dependency: Dependency
+    
+    init(dependency: Dependency) {
+        self.dependency = dependency
+    }
     
     enum Item {
         case cell(NowPlayingListCellModel)
@@ -46,9 +56,11 @@ extension HomeViewModel: HomeViewModelType{
     }
     
     // MARK: - Delegate
-    func didSelectedItemAt(_ indexPath: IndexPath) -> Movie? {
-        guard let movie = self.movies[safe: indexPath.row] else { return nil }
-        return movie
+    func didSelectedItemAt(_ indexPath: IndexPath) {
+        guard let movie = self.movies[safe: indexPath.row] else { return }
+        dependency.coordinator.push(at: .home,
+                                    scene: .movie(.init(dependency: .init(movie: movie))),
+                                    animated: true)
     }
     
     func willDisplay(forItemAt indexPath: IndexPath) {

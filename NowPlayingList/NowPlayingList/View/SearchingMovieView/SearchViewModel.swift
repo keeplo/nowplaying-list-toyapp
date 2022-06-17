@@ -13,7 +13,7 @@ protocol SearchViewModelType {
     func numberOfRowsInSection(_ section: Int) -> Int
     func cellModel(at indexPath: IndexPath) -> Item?
     func willDisplay(forRowAt indexPath: IndexPath)
-    func didSelectRowAt(_ indexPath: IndexPath) -> Movie?
+    func didSelectRowAt(_ indexPath: IndexPath)
     func cellHeightType() -> SearchViewModel.SearchResult
     
     func requestSearchMovie(of text: String)
@@ -21,6 +21,16 @@ protocol SearchViewModelType {
 }
 
 final class SearchViewModel: NSObject, DecodeRequestable {
+    
+    struct Dependency {
+        let coordinator: SceneCoordinator
+    }
+    
+    private let dependency: Dependency
+    
+    init(dependency: Dependency) {
+        self.dependency = dependency
+    }
     
     enum Item {
         case emptyCell
@@ -98,9 +108,12 @@ extension SearchViewModel: SearchViewModelType {
         }
     }
     
-    func didSelectRowAt(_ indexPath: IndexPath) -> Movie? {
-        guard let movie = self.movies[safe: indexPath.row] else { return nil }
-        return movie
+    func didSelectRowAt(_ indexPath: IndexPath) {
+        guard let movie = self.movies[safe: indexPath.row] else { return }
+        
+        dependency.coordinator.push(at: .search,
+                                    scene: .movie(.init(dependency: .init(movie: movie))),
+                                    animated: true)
     }
     
     func cellHeightType() -> SearchResult {

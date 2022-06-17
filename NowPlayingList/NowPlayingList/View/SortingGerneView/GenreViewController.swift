@@ -12,6 +12,15 @@ import SnapKit
 final class GenreViewController: UIViewController {
     
     private let dummyGuideLabel = UILabel(frame: .zero)
+    private let viewModel: GenreViewModel
+    
+    init(viewModel: GenreViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,10 +37,6 @@ final class GenreViewController: UIViewController {
     }
     
     private func setupAttributes() {
-        self.view.do {
-            $0.backgroundColor = .systemBackground
-        }
-        
         self.dummyGuideLabel.do {
             $0.text = self.className
             $0.textColor = .label
