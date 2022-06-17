@@ -15,7 +15,8 @@ protocol SearchViewModelEvent: AnyObject {
 
 final class SearchViewController: UIViewController, CanShowMovieDetailView {
     private let navigationView = NavigationView(frame: .zero)
-    private let searchView = SearchView(frame: .zero)
+    private let searchBar = UISearchBar(frame: .zero)
+    private let tableView = UITableView(frame: .zero, style: .plain)
     private var viewModel: SearchViewModel
     
     private var autoSearchTimer: Timer?
@@ -54,9 +55,14 @@ final class SearchViewController: UIViewController, CanShowMovieDetailView {
             make.height.equalTo(66)
         }
         
-        self.view.addSubview(self.searchView)
-        self.searchView.snp.makeConstraints { make in
-            make.top.equalTo(self.navigationView.snp.bottom)
+        self.view.addSubview(self.searchBar)
+        self.searchBar.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+        }
+        
+        self.view.addSubview(self.tableView)
+        self.tableView.snp.makeConstraints { make in
+            make.top.equalTo(self.searchBar.snp.bottom)
             make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
             make.leading.trailing.equalToSuperview()
         }
@@ -67,7 +73,7 @@ final class SearchViewController: UIViewController, CanShowMovieDetailView {
             $0.configure(title: Strings.Navigation.searching.description)
         }
         
-        self.searchView.do {
+        self.tableView.do {
             $0.delegate = self
             $0.dataSource = self
         }
@@ -78,7 +84,7 @@ final class SearchViewController: UIViewController, CanShowMovieDetailView {
     }
 }
 
-extension SearchViewController: SearchViewDataSource {
+extension SearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.viewModel.numberOfRowsInSection(section)
     }
@@ -117,7 +123,7 @@ extension SearchViewController: SearchViewDataSource {
     }
 }
 
-extension SearchViewController: SearchViewDelegate {
+extension SearchViewController: UITableViewDelegate {
     // MARK: - TableView Delegate
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         self.viewModel.willDisplay(forRowAt: indexPath)
@@ -135,7 +141,7 @@ extension SearchViewController: SearchViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch self.viewModel.cellHeightType() {
         case .emptyResult:
-            return self.searchView.bounds.height
+            return self.view.bounds.height
         case .success:
             return UIScreen.main.bounds.height / 5
         }
@@ -185,6 +191,6 @@ extension SearchViewController {
 
 extension SearchViewController: SearchViewModelEvent {
     func reloadData() {
-        self.searchView.reloadData()
+        self.tableView.reloadData()
     }
 }

@@ -15,7 +15,9 @@ protocol HomeViewModelEvent: AnyObject {
 
 final class HomeViewController: UIViewController, CanShowMovieDetailView {
     private let navigationView = NavigationView(frame: .zero)
-    private let homeView = HomeView(frame: .zero)
+    private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout()).then {
+        $0.register(NowPlayingListCell.self)
+    }
     private var viewModel: HomeViewModel
     
     init(viewModel: HomeViewModel) {
@@ -51,8 +53,8 @@ final class HomeViewController: UIViewController, CanShowMovieDetailView {
             make.height.equalTo(66)
         }
         
-        self.view.addSubview(self.homeView)
-        self.homeView.snp.makeConstraints { make in
+        self.view.addSubview(self.collectionView)
+        self.collectionView.snp.makeConstraints { make in
             make.top.equalTo(self.navigationView.snp.bottom)
             make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
             make.leading.trailing.equalToSuperview()
@@ -64,7 +66,7 @@ final class HomeViewController: UIViewController, CanShowMovieDetailView {
             $0.configure(title: Strings.Navigation.nowplaying.description)
         }
         
-        self.homeView.do {
+        self.collectionView.do {
             $0.delegate = self
             $0.dataSource = self
         }
@@ -93,7 +95,7 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension HomeViewController: HomeViewDelegate {
+extension HomeViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         self.viewModel.willDisplay(forItemAt: indexPath)
     }
@@ -108,7 +110,7 @@ extension HomeViewController: HomeViewDelegate {
     }
 }
 
-extension HomeViewController: HomeViewDataSource {
+extension HomeViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.viewModel.numberOfItemsInSection(section)
     }
@@ -131,6 +133,6 @@ extension HomeViewController: HomeViewDataSource {
 
 extension HomeViewController: HomeViewModelEvent {
     func reloadData() {
-        self.homeView.reloadData()
+        self.collectionView.reloadData()
     }
 }
