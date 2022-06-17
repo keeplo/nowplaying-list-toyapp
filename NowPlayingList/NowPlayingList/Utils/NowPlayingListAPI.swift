@@ -8,6 +8,7 @@
 import Foundation
 
 enum NowPlayingListAPI {
+    
     private static var apiKey: String {
         guard let filePath = Bundle.main.path(forResource: "APIKey", ofType: "plist"),
               let plist = NSDictionary(contentsOfFile: filePath),
@@ -56,10 +57,12 @@ enum NowPlayingListAPI {
         parameters.append("ko")
         return parameters
     }
+    
 }
 
 // MARK: -- Methods
 extension NowPlayingListAPI {
+    
     static func makeImageURL(_ filePath: String) -> URL? {
         let baseURL = "https://image.tmdb.org/t/p/w500/"
         return URL(string: baseURL + filePath)
@@ -77,4 +80,5 @@ extension NowPlayingListAPI {
         components.queryItems = queryItems
         return components.url
     }
+    
 }

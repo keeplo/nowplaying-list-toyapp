@@ -62,4 +62,5 @@ final class DetailViewController: UIViewController {
             $0.textColor = .label
         }
     }
+    
 }

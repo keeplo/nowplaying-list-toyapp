@@ -18,6 +18,7 @@ struct SearchedListCellModel {
 }
 
 final class SearchedListCell: UITableViewCell {
+    
     private var posterImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFill
     }
@@ -79,12 +80,12 @@ final class SearchedListCell: UITableViewCell {
         movieTitleLabel.text = Strings.emptyString
         movieRatedLabel.text = Strings.emptyString
     }
+    
 }
 
-extension SearchedListCell: Configurable {
-    func configureData<T>(_ data: T) {
-        guard let model = data as? SearchedListCellModel else { return }
-        
+extension SearchedListCell {
+    
+    func configureData(_ model: SearchedListCellModel) {
         movieTitleLabel.text = model.title
         movieDateLabel.text = model.date
         movieRatedLabel.text = Strings.starText + "\(model.rated)"
@@ -93,4 +94,5 @@ extension SearchedListCell: Configurable {
             posterImageView.kf.setImage(with: url)
         }
     }
+    
 }

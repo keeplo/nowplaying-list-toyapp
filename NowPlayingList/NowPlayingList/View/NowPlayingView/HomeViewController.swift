@@ -14,6 +14,7 @@ protocol HomeViewModelEvent: AnyObject {
 }
 
 final class HomeViewController: UIViewController, CanShowMovieDetailView {
+    
     private let navigationView = NavigationView(frame: .zero)
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout()).then {
         $0.register(NowPlayingListCell.self)
@@ -22,7 +23,6 @@ final class HomeViewController: UIViewController, CanShowMovieDetailView {
     
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
-        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -75,9 +75,11 @@ final class HomeViewController: UIViewController, CanShowMovieDetailView {
             $0.delegate = self
         }
     }
+    
 }
 
 extension HomeViewController: UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = UIScreen.main.bounds.width
         let itemPerRow: CGFloat = 2
@@ -93,9 +95,11 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
     }
+    
 }
 
 extension HomeViewController: UICollectionViewDelegate {
+    
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         self.viewModel.willDisplay(forItemAt: indexPath)
     }
@@ -108,9 +112,11 @@ extension HomeViewController: UICollectionViewDelegate {
             return
         }
     }
+    
 }
 
 extension HomeViewController: UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.viewModel.numberOfItemsInSection(section)
     }
@@ -129,10 +135,13 @@ extension HomeViewController: UICollectionViewDataSource {
             return cell
         }
     }
+    
 }
 
 extension HomeViewController: HomeViewModelEvent {
+    
     func reloadData() {
         self.collectionView.reloadData()
     }
+    
 }

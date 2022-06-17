@@ -17,6 +17,7 @@ struct NowPlayingListCellModel {
 }
 
 final class NowPlayingListCell: UICollectionViewCell {
+    
     private var posterImageView = UIImageView().then {
         $0.contentMode = .scaleAspectFit
     }
@@ -77,12 +78,12 @@ final class NowPlayingListCell: UICollectionViewCell {
         titleLabel.text = Strings.emptyString
         ratedLabel.text = Strings.emptyString
     }
+    
 }
 
-extension NowPlayingListCell: Configurable {
-    func configureData<T>(_ data: T) {
-        guard let model = data as? NowPlayingListCellModel else { return }
-        
+extension NowPlayingListCell {
+    
+    func configureData(_ model: NowPlayingListCellModel) {
         titleLabel.text = model.title
         ratedLabel.text = Strings.starText + "\(model.rated)"
         if let path = model.imagePath,
@@ -90,4 +91,5 @@ extension NowPlayingListCell: Configurable {
             posterImageView.kf.setImage(with: url)
         }
     }
+    
 }

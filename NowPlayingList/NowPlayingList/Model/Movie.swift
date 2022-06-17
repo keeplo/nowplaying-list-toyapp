@@ -6,6 +6,7 @@
 //
 
 struct Movie: Identifiable, Decodable {
+    
     let id: Int
     let title: String
     let releaseDate: String
@@ -16,4 +17,5 @@ struct Movie: Identifiable, Decodable {
         case id, title, releaseDate, posterPath
         case rated = "voteAverage"
     }
+    
 }

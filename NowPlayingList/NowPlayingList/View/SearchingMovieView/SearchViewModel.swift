@@ -41,9 +41,11 @@ final class SearchViewModel: NSObject, DecodeRequestable {
             self.delegate?.reloadData()
         }
     }
+    
 }
 
 extension SearchViewModel: SearchViewModelType {
+    
     func requestSearchMovie(of text: String = Strings.emptyString) {
         if !text.isEmpty { self.currentSearchWord = text }
         guard let url = NowPlayingListAPI.searching(self.currentSearchWord, page.last).makeURL() else {
@@ -104,6 +106,7 @@ extension SearchViewModel: SearchViewModelType {
     func cellHeightType() -> SearchResult {
         return self.searchResult
     }
+    
 }
 
 

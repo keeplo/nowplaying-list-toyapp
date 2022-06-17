@@ -8,5 +8,7 @@
 import UIKit.UIGeometry
 
 extension CGFloat {
+    
     static let padding: CGFloat = 8.0
+    
 }

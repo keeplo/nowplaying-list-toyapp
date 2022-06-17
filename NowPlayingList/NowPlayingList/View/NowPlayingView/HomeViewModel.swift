@@ -68,4 +68,5 @@ extension HomeViewModel: HomeViewModelType{
             self.page = (page.page, page.totalPages)
         }
     }
+    
 }

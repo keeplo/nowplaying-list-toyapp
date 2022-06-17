@@ -10,6 +10,11 @@ import Then
 import SnapKit
 
 final class NavigationView: UIView {
+    
+    private let titleLabel = UILabel(frame: .zero).then {
+        $0.textColor = .label
+        $0.font = .systemFont(ofSize: 30, weight: .bold)
+    }
         
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -21,11 +26,7 @@ final class NavigationView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    func configure(title: String) {
-        self.titleLabel.text = title
-    }
-    
+
     private func setupLayout() {
         self.addSubview(self.titleLabel)
         self.titleLabel.snp.makeConstraints { make in
@@ -38,12 +39,10 @@ final class NavigationView: UIView {
         self.do {
             $0.backgroundColor = .systemGroupedBackground
         }
-        
-        self.titleLabel.do {
-            $0.textColor = .label
-            $0.font = .systemFont(ofSize: 30, weight: .bold)
-        }
     }
     
-    private let titleLabel = UILabel(frame: .zero)
+    func configure(title: String) {
+        self.titleLabel.text = title
+    }
+    
 }

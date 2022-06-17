@@ -37,4 +37,5 @@ final class GenreViewController: UIViewController {
             $0.textColor = .label
         }
     }
+    
 }

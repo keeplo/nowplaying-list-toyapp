@@ -17,6 +17,7 @@ protocol DecodeRequestable {
 }
 
 extension DecodeRequestable {
+    
     func requestData(with url: URL, _ completion: @escaping (Result<Data, Error>) -> Void) {
         URLSession.shared.dataTask(with: url) { data, _ , error in
             guard error == nil else {
@@ -56,4 +57,5 @@ extension DecodeRequestable {
             }
         }
     }
+    
 }

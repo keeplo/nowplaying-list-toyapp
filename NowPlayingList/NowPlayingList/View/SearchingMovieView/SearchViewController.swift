@@ -23,12 +23,10 @@ final class SearchViewController: UIViewController, CanShowMovieDetailView {
     
     init(viewModel: SearchViewModel) {
         self.viewModel = viewModel
-        
         super.init(nibName: nil, bundle: nil)
     }
     
-    required init?(coder:
-                   NSCoder) {
+    required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -124,6 +122,7 @@ extension SearchViewController: UITableViewDataSource {
 }
 
 extension SearchViewController: UITableViewDelegate {
+    
     // MARK: - TableView Delegate
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         self.viewModel.willDisplay(forRowAt: indexPath)
@@ -174,6 +173,7 @@ extension SearchViewController: UITableViewDelegate {
 
 // MARK: -- Timer Methods
 extension SearchViewController {
+    
     private func startTimer(perform: @escaping () -> Void) {
         if autoSearchTimer != nil { cancelTimer() }
         autoSearchTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in
@@ -187,10 +187,13 @@ extension SearchViewController {
         autoSearchTimer?.invalidate()
         autoSearchTimer = nil
     }
+    
 }
 
 extension SearchViewController: SearchViewModelEvent {
+    
     func reloadData() {
         self.tableView.reloadData()
     }
+    
 }
