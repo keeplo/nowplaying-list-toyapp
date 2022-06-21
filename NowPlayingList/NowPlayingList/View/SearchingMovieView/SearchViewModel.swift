@@ -12,7 +12,7 @@ protocol SearchViewModelType {
 
     func numberOfRowsInSection(_ section: Int) -> Int
     func cellModel(at indexPath: IndexPath) -> Item?
-    func willDisplay(forRowAt indexPath: IndexPath)
+//    func willDisplay(forRowAt indexPath: IndexPath)
     func didSelectRowAt(_ indexPath: IndexPath)
     func cellHeightType() -> SearchViewModel.SearchResult
     
@@ -20,7 +20,7 @@ protocol SearchViewModelType {
     func resetDataSource()
 }
 
-final class SearchViewModel: NSObject, DecodeRequestable {
+final class SearchViewModel: NSObject {
     
     struct Dependency {
         let coordinator: SceneCoordinator
@@ -43,7 +43,7 @@ final class SearchViewModel: NSObject, DecodeRequestable {
     }
     
     weak var delegate: SearchViewModelEvent?
-    private var page: (last: Int, total: Int) = (1, 0)
+    private var page = Page.base
     private var currentSearchWord: String = Strings.emptyString
     private var searchResult: SearchResult = .success
     private var movies: [Movie] = [] {
@@ -58,26 +58,29 @@ extension SearchViewModel: SearchViewModelType {
     
     func requestSearchMovie(of text: String = Strings.emptyString) {
         if !text.isEmpty { self.currentSearchWord = text }
-        guard let url = NowPlayingListAPI.searching(self.currentSearchWord, page.last).makeURL() else {
-            NSLog("\(#function) - URL 생성 실패")
-            return
-        }
-        parseRequestedData(url: url, type: Page.self) { page in
-            if page.results.isEmpty {
-                self.searchResult = .emptyResult
-                self.movies = []
-            } else {
-                self.searchResult = .success
-                self.movies.append(contentsOf: page.results)
-                self.page = (page.page, page.totalPages)
+        API
+            .search(by: text, page: page.page)
+            .request { [weak self] result in
+                switch result {
+                case .success(let page):
+                    if page.results.isEmpty {
+                        self?.page = .base
+                        self?.movies = []
+                    } else {
+                        self?.searchResult = .success
+                        self?.movies.append(contentsOf: page.results)
+                        self?.page = page
+                    }
+                case .failure(let error):
+                    debugPrint("\(#function) - \(error.localizedDescription)")
+                }
             }
-        }
     }
     
     func resetDataSource() {
         searchResult = .success
         movies = []
-        page = (1, 0)
+        page = .base
     }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
@@ -101,12 +104,12 @@ extension SearchViewModel: SearchViewModelType {
         }
     }
     
-    func willDisplay(forRowAt indexPath: IndexPath) {
-        if page.last < page.total, indexPath.item == (movies.count / 2) {
-            page.last += 1
-            self.requestSearchMovie()
-        }
-    }
+//    func willDisplay(forRowAt indexPath: IndexPath) {
+//        if page.last < page.total, indexPath.item == (movies.count / 2) {
+//            page.last += 1
+//            self.requestSearchMovie()
+//        }
+//    }
     
     func didSelectRowAt(_ indexPath: IndexPath) {
         guard let movie = self.movies[safe: indexPath.row] else { return }

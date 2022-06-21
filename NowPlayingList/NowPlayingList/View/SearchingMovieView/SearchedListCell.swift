@@ -90,7 +90,7 @@ extension SearchedListCell {
         movieDateLabel.text = model.date
         movieRatedLabel.text = Strings.starText + "\(model.rated)"
         if let path = model.imagePath,
-            let url = NowPlayingListAPI.makeImageURL(path) {
+            let url = API.makeImageURL(path) {
             posterImageView.kf.setImage(with: url)
         }
     }

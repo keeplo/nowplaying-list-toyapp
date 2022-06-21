@@ -12,12 +12,12 @@ protocol HomeViewModelType {
     func numberOfItemsInSection(_ section: Int) -> Int
     func cellModel(at indexPath: IndexPath) -> Item?
     func didSelectedItemAt(_ indexPath: IndexPath)
-    func willDisplay(forItemAt: IndexPath)
+//    func willDisplay(forItemAt: IndexPath)
     
-    func fetchNowPlayingList()
+    func fetchList()
 }
 
-final class HomeViewModel: NSObject, DecodeRequestable {
+final class HomeViewModel: NSObject {
     
     struct Dependency {
         let coordinator: SceneCoordinator
@@ -34,7 +34,7 @@ final class HomeViewModel: NSObject, DecodeRequestable {
     }
     
     weak var delegate: HomeViewModelEvent?
-    private var page: (last: Int, total: Int) = (1, 0)
+    private var page = Page.base
     private var movies: [Movie] = [] {
         didSet {
             self.delegate?.reloadData()
@@ -42,7 +42,7 @@ final class HomeViewModel: NSObject, DecodeRequestable {
     }
 }
 
-extension HomeViewModel: HomeViewModelType{
+extension HomeViewModel: HomeViewModelType {
     // MARK: - DataSource
     func numberOfItemsInSection(_ section: Int) -> Int {
         return self.movies.count
@@ -63,22 +63,32 @@ extension HomeViewModel: HomeViewModelType{
                                     animated: true)
     }
     
-    func willDisplay(forItemAt indexPath: IndexPath) {
-        if page.last < page.total, indexPath.item == (self.movies.count / 4) {
-            page.last += 1
-            self.fetchNowPlayingList()
-        }
+//    func willDisplay(forItemAt indexPath: IndexPath) {
+//        if page.page < page.totalPages, indexPath.item == (self.movies.count / 4) {
+//            page.page += 1
+//            self.fetchList()
+//        }
+//    }
+//    
+    func fetchList() {
+        API
+            .fetch(page: page.page)
+            .request(completion: { [weak self] result in
+                switch result {
+                case .success(let page):
+                    self?.page = page
+                    self?.movies.append(contentsOf: page.results)
+                case .failure(let error):
+                    debugPrint("\(#function) - local: \(error), description: \(error.localizedDescription)")
+                }
+            })
     }
     
-    func fetchNowPlayingList() {
-        guard let url = NowPlayingListAPI.nowplaying(page.last).makeURL() else {
-            NSLog("\(#function) - URL 생성 실패")
+    func fetchMoreList() {
+        guard page.page < page.totalPages else {
             return
         }
-        parseRequestedData(url: url, type: Page.self) { page in
-            self.movies.append(contentsOf: page.results)
-            self.page = (page.page, page.totalPages)
-        }
+        fetchList()
     }
     
 }

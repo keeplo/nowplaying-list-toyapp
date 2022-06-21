@@ -34,14 +34,13 @@ final class HomeViewController: UIViewController {
         
         self.setupLayout()
         self.setupAttributes()
+        self.viewModel.fetchList()
     }
      
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-        
-        self.viewModel.fetchNowPlayingList()
     }
     
     private func setupLayout() {
@@ -99,10 +98,10 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
 
 extension HomeViewController: UICollectionViewDelegate {
     
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        self.viewModel.willDisplay(forItemAt: indexPath)
-    }
-    
+//    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+//        self.viewModel.willDisplay(forItemAt: indexPath)
+//    }
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.viewModel.didSelectedItemAt(indexPath)
     }
@@ -135,7 +134,9 @@ extension HomeViewController: UICollectionViewDataSource {
 extension HomeViewController: HomeViewModelEvent {
     
     func reloadData() {
-        self.collectionView.reloadData()
+        DispatchQueue.main.async { [weak self] in
+            self?.collectionView.reloadData()
+        }
     }
     
 }

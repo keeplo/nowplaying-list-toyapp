@@ -130,9 +130,9 @@ extension SearchViewController: UITableViewDataSource {
 extension SearchViewController: UITableViewDelegate {
     
     // MARK: - TableView Delegate
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        self.viewModel.willDisplay(forRowAt: indexPath)
-    }
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        self.viewModel.willDisplay(forRowAt: indexPath)
+//    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         viewModel.didSelectRowAt(indexPath)
@@ -197,7 +197,9 @@ extension SearchViewController {
 extension SearchViewController: SearchViewModelEvent {
     
     func reloadData() {
-        self.tableView.reloadData()
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView.reloadData()
+        }
     }
     
 }
