@@ -16,11 +16,13 @@ protocol SearchViewModelEvent: AnyObject {
 final class SearchViewController: UIViewController {
     private let navigationView = NavigationView(frame: .zero)
     private let searchBar = UISearchBar(frame: .zero)
-    private let tableView = UITableView(frame: .zero, style: .plain).then {
+    private var viewModel: SearchViewModel
+    private let tableView = UITableView(
+        frame: .zero,
+        style: .plain
+    ).then {
         $0.register(SearchedListCell.self)
     }
-    private var viewModel: SearchViewModel
-    
     private var autoSearchTimer: Timer?
     
     init(viewModel: SearchViewModel) {
@@ -36,8 +38,6 @@ final class SearchViewController: UIViewController {
         
         self.setupLayout()
         self.setupAttributes()
-        
-        self.navigationController?.navigationBar.topItem?.title = Strings.Navigation.searching.description
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -130,9 +130,9 @@ extension SearchViewController: UITableViewDataSource {
 extension SearchViewController: UITableViewDelegate {
     
     // MARK: - TableView Delegate
-//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        self.viewModel.willDisplay(forRowAt: indexPath)
-//    }
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        self.viewModel.willDisplay(forRowAt: indexPath)
+    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         viewModel.didSelectRowAt(indexPath)

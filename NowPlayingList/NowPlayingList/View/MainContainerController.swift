@@ -18,9 +18,7 @@ final class MainContainerController: UITabBarController {
     
     init(dependency: Dependecy) {
         self.dependency = dependency
-        
-        print(#function)
-    
+            
         super.init(nibName: nil, bundle: nil)
         self.setupAttributes()
         self.setupViewControllers()
@@ -43,7 +41,6 @@ final class MainContainerController: UITabBarController {
     }
     
     private func setupViewControllers() {
-        print(#function)
         let viewControllers = dependency.tabViewControllers
         
         self.setViewControllers(viewControllers, animated: false)

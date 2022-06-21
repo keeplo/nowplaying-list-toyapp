@@ -72,7 +72,6 @@ extension SceneCoordinator {
     func push(at navigation: Navigation, scene: Scene, animated: Bool) {
         let viewController = makeScene(scene: scene)
         
-        print("\(#function) navigation \(navigation), scene \(scene)")
         guard let navigationController = self.navigationControllers[safe: navigation.rawValue] else { return }
         viewController.hidesBottomBarWhenPushed = true
         navigationController.setNavigationBarHidden(false, animated: false)

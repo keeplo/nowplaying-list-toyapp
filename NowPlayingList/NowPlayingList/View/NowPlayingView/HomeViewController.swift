@@ -16,10 +16,13 @@ protocol HomeViewModelEvent: AnyObject {
 final class HomeViewController: UIViewController {
     
     private let navigationView = NavigationView(frame: .zero)
-    private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout()).then {
+    private var viewModel: HomeViewModel
+    private let collectionView = UICollectionView(
+        frame: .zero,
+        collectionViewLayout: UICollectionViewFlowLayout()
+    ).then {
         $0.register(NowPlayingListCell.self)
     }
-    private var viewModel: HomeViewModel
     
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel

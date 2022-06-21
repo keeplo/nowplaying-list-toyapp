@@ -12,7 +12,7 @@ protocol SearchViewModelType {
 
     func numberOfRowsInSection(_ section: Int) -> Int
     func cellModel(at indexPath: IndexPath) -> Item?
-//    func willDisplay(forRowAt indexPath: IndexPath)
+    func willDisplay(forRowAt indexPath: IndexPath)
     func didSelectRowAt(_ indexPath: IndexPath)
     func cellHeightType() -> SearchViewModel.SearchResult
     
