@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum NowPlayingListAPI {
+enum API {
     
     private static var apiKey: String {
         guard let filePath = Bundle.main.path(forResource: "APIKey", ofType: "plist"),
@@ -16,13 +16,17 @@ enum NowPlayingListAPI {
             NSLog("Couldn't find file 'WeatherInfo.plist'.")
             return ""
         }
-        
         return apiKey
     }
     
-    private static let scheme = "https"
-    private static let host = "api.themoviedb.org"
-    private static let appID = NowPlayingListAPI.apiKey
+    private static let components: URLComponents = {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "api.themoviedb.org"
+        return components
+    }()
+    
+    private static let appID = API.apiKey
 
     case nowplaying(Int)
     case searching(String, Int)
@@ -31,7 +35,7 @@ enum NowPlayingListAPI {
         switch self {
         case .nowplaying:
             return "/3/movie/now_playing"
-        case .searching(_, _):
+        case .searching:
             return "/3/search/movie"
         }
     }
@@ -40,7 +44,7 @@ enum NowPlayingListAPI {
         switch self {
         case .nowplaying:
             return ["page", "api_key", "language"]
-        case .searching(_, _):
+        case .searching:
             return ["query", "page", "api_key", "language"]
         }
     }
@@ -53,32 +57,40 @@ enum NowPlayingListAPI {
         case .searching(let query, let page):
             parameters = [query, String(page)]
         }
-        parameters.append(NowPlayingListAPI.appID)
+        parameters.append(API.appID)
         parameters.append("ko")
         return parameters
     }
     
-}
-
-// MARK: -- Methods
-extension NowPlayingListAPI {
-    
-    static func makeImageURL(_ filePath: String) -> URL? {
-        let baseURL = "https://image.tmdb.org/t/p/w500/"
-        return URL(string: baseURL + filePath)
-    }
-    
-    func makeURL() -> URL? {
-        var components = URLComponents()
-        components.scheme = NowPlayingListAPI.scheme
-        components.host = NowPlayingListAPI.host
+    private func makeURL() -> URL? {
+        var components = Self.components
         components.path = path
         
-        let queryDictionary = Dictionary(uniqueKeysWithValues: zip(self.keys, self.values))
+        let queryDictionary = Dictionary(
+            uniqueKeysWithValues: zip(self.keys, self.values))
         let queryItems = queryDictionary.map({ URLQueryItem(name: $0.key, value: $0.value) })
         
         components.queryItems = queryItems
         return components.url
+    }
+}
+
+// MARK: -- Methods
+extension API {
+    
+    static func fetch(page: Int) -> NetworkRequest<Page> {
+        let url = Self.nowplaying(page).makeURL()
+        return NetworkRequest(url: url)
+    }
+    
+    static func search(by keyword: String, page: Int) -> NetworkRequest<Page> {
+        let url = Self.searching(keyword, page).makeURL()
+        return NetworkRequest(url: url)
+    }
+    
+    static func makeImageURL(_ filePath: String) -> URL? {
+        let baseURL = "https://image.tmdb.org/t/p/w500/"
+        return URL(string: baseURL + filePath)
     }
     
 }

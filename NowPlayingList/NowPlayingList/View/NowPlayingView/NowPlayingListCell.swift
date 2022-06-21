@@ -87,7 +87,7 @@ extension NowPlayingListCell {
         titleLabel.text = model.title
         ratedLabel.text = Strings.starText + "\(model.rated)"
         if let path = model.imagePath,
-            let url = NowPlayingListAPI.makeImageURL(path) {
+            let url = API.makeImageURL(path) {
             posterImageView.kf.setImage(with: url)
         }
     }
