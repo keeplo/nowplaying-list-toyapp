@@ -140,10 +140,10 @@ extension SearchViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch self.viewModel.cellHeightType() {
-        case .emptyResult:
-            return self.view.bounds.height
         case .success:
             return UIScreen.main.bounds.height / 5
+        default:
+            return self.view.bounds.height
         }
     }
     

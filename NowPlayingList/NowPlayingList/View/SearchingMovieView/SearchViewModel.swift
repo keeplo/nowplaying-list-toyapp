@@ -38,14 +38,15 @@ final class SearchViewModel: NSObject {
     }
     
     enum SearchResult {
+        case idle
+        case success(String)
         case emptyResult
-        case success
     }
     
     weak var delegate: SearchViewModelEvent?
-    private var page = Page.base
+    private var page: Page = .base
+    private var searchResult: SearchResult = .idle
     private var currentSearchWord: String = Strings.emptyString
-    private var searchResult: SearchResult = .success
     private var movies: [Movie] = [] {
         didSet {
             self.delegate?.reloadData()
@@ -59,7 +60,7 @@ extension SearchViewModel: SearchViewModelType {
     func requestSearchMovie(of text: String = Strings.emptyString) {
         if !text.isEmpty { self.currentSearchWord = text }
         API
-            .search(by: text, page: page.page)
+            .search(by: text, page: page.page + 1)
             .request { [weak self] result in
                 switch result {
                 case .success(let page):
@@ -67,7 +68,7 @@ extension SearchViewModel: SearchViewModelType {
                         self?.page = .base
                         self?.movies = []
                     } else {
-                        self?.searchResult = .success
+                        self?.searchResult = .success(text)
                         self?.movies.append(contentsOf: page.results)
                         self?.page = page
                     }
@@ -77,39 +78,54 @@ extension SearchViewModel: SearchViewModelType {
             }
     }
     
+    func requestMoreSearchedMovie() {
+        guard case let SearchResult.success(keyword) = searchResult else { return }
+        
+        API
+            .search(by: keyword, page: page.page + 1)
+            .request { [weak self] result in
+                switch result {
+                case .success(let page):
+                    self?.movies.append(contentsOf: page.results)
+                    self?.page = page
+                case .failure(let error):
+                    debugPrint("\(#function) - \(error.localizedDescription)")
+                }
+            }
+    }
+    
     func resetDataSource() {
-        searchResult = .success
-        movies = []
         page = .base
+        searchResult = .idle
+        movies = []
     }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
         switch searchResult {
-        case .emptyResult:
-            return 1
         case .success:
             return movies.count
+        default:
+            return 1
         }
     }
     
     func cellModel(at indexPath: IndexPath) -> Item? {
         switch searchResult {
-        case .emptyResult:
-            return .emptyCell
         case .success:
             guard let movie = self.movies[safe: indexPath.row] else { return nil }
             return .cell(SearchedListCellModel(title: movie.title,
                                                date: movie.releaseDate, rated: movie.rated,
                                                imagePath: movie.posterPath))
+        default:
+            return .emptyCell
         }
     }
     
-//    func willDisplay(forRowAt indexPath: IndexPath) {
-//        if page.last < page.total, indexPath.item == (movies.count / 2) {
-//            page.last += 1
-//            self.requestSearchMovie()
-//        }
-//    }
+    func willDisplay(forRowAt indexPath: IndexPath) {
+        if page.page < page.totalPages, indexPath.item == (movies.count / 2) {
+            self.requestSearchMovie()
+        }
+    }
     
     func didSelectRowAt(_ indexPath: IndexPath) {
         guard let movie = self.movies[safe: indexPath.row] else { return }

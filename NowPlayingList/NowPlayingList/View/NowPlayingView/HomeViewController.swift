@@ -98,9 +98,9 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
 
 extension HomeViewController: UICollectionViewDelegate {
     
-//    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//        self.viewModel.willDisplay(forItemAt: indexPath)
-//    }
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        self.viewModel.willDisplay(forItemAt: indexPath)
+    }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.viewModel.didSelectedItemAt(indexPath)

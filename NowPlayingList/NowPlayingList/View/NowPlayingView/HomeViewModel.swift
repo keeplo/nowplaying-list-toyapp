@@ -12,7 +12,7 @@ protocol HomeViewModelType {
     func numberOfItemsInSection(_ section: Int) -> Int
     func cellModel(at indexPath: IndexPath) -> Item?
     func didSelectedItemAt(_ indexPath: IndexPath)
-//    func willDisplay(forItemAt: IndexPath)
+    func willDisplay(forItemAt: IndexPath)
     
     func fetchList()
 }
@@ -34,7 +34,7 @@ final class HomeViewModel: NSObject {
     }
     
     weak var delegate: HomeViewModelEvent?
-    private var page = Page.base
+    private var page: Page = .base
     private var movies: [Movie] = [] {
         didSet {
             self.delegate?.reloadData()
@@ -63,16 +63,15 @@ extension HomeViewModel: HomeViewModelType {
                                     animated: true)
     }
     
-//    func willDisplay(forItemAt indexPath: IndexPath) {
-//        if page.page < page.totalPages, indexPath.item == (self.movies.count / 4) {
-//            page.page += 1
-//            self.fetchList()
-//        }
-//    }
-//    
+    func willDisplay(forItemAt indexPath: IndexPath) {
+        if page.page < page.totalPages, indexPath.item == (self.movies.count / 4) {
+            self.fetchList()
+        }
+    }
+    
     func fetchList() {
         API
-            .fetch(page: page.page)
+            .fetch(page: page.page + 1)
             .request(completion: { [weak self] result in
                 switch result {
                 case .success(let page):
@@ -82,13 +81,6 @@ extension HomeViewModel: HomeViewModelType {
                     debugPrint("\(#function) - local: \(error), description: \(error.localizedDescription)")
                 }
             })
-    }
-    
-    func fetchMoreList() {
-        guard page.page < page.totalPages else {
-            return
-        }
-        fetchList()
     }
     
 }
