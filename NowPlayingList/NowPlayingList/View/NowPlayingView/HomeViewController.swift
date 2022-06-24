@@ -8,21 +8,17 @@
 import UIKit
 import Then
 import SnapKit
-
-protocol HomeViewModelEvent: AnyObject {
-    func reloadData()
-}
+import RxSwift
 
 final class HomeViewController: UIViewController {
     
+    private let disposeBag = DisposeBag()
     private let navigationView = NavigationView(frame: .zero)
     private var viewModel: HomeViewModel
     private let collectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: UICollectionViewFlowLayout()
-    ).then {
-        $0.register(NowPlayingListCell.self)
-    }
+    )
     
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
@@ -37,6 +33,7 @@ final class HomeViewController: UIViewController {
         
         self.setupLayout()
         self.setupAttributes()
+        self.setupBind()
         self.viewModel.fetchList()
     }
      
@@ -47,17 +44,17 @@ final class HomeViewController: UIViewController {
     }
     
     private func setupLayout() {
-        self.view.addSubview(self.navigationView)
+        self.view.addSubview(navigationView)
         self.navigationView.snp.makeConstraints { make in
-            make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(66)
         }
         
-        self.view.addSubview(self.collectionView)
+        self.view.addSubview(collectionView)
         self.collectionView.snp.makeConstraints { make in
             make.top.equalTo(self.navigationView.snp.bottom)
-            make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             make.leading.trailing.equalToSuperview()
         }
     }
@@ -68,13 +65,39 @@ final class HomeViewController: UIViewController {
         }
         
         self.collectionView.do {
-            $0.delegate = self
-            $0.dataSource = self
+            $0.register(NowPlayingListCell.self)
         }
+    }
+    
+    private func setupBind() {
+        self.collectionView.rx
+            .setDelegate(self)
+            .disposed(by: disposeBag)
         
-        self.viewModel.do {
-            $0.delegate = self
-        }
+        self.collectionView.rx.modelSelected(Movie.self)
+            .subscribe { [weak self] movie in
+                self?.viewModel.pushDetailView(by: movie)
+            }
+            .disposed(by: disposeBag)
+        
+        self.collectionView.rx.prefetchItems
+            .compactMap(\.last?.item)
+            .withUnretained(collectionView)
+            .bind { [weak self] list, item in
+                guard item == list.numberOfItems(inSection: 0) - 1 else { return }
+                self?.viewModel.fetchList()
+            }
+            .disposed(by: disposeBag)
+        
+        // Output
+        self.viewModel.output.list
+            .bind(to: collectionView.rx.items) { collectionView, item, element in
+                let indexPath = IndexPath(item: item, section: 0)
+                let cell = collectionView.dequeueReusableCell(NowPlayingListCell.self, at: indexPath)
+                cell?.configureData(.init(title: element.title, rated: element.rated, imagePath: element.posterPath))
+                return cell ?? UICollectionViewCell()
+            }
+            .disposed(by: disposeBag)
     }
     
 }
@@ -95,51 +118,6 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-    }
-    
-}
-
-extension HomeViewController: UICollectionViewDelegate {
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        self.viewModel.willDisplay(forItemAt: indexPath)
-    }
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.viewModel.didSelectedItemAt(indexPath)
-    }
-    
-}
-
-extension HomeViewController: UICollectionViewDataSource {
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.viewModel.numberOfItemsInSection(section)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let model = self.viewModel.cellModel(at: indexPath) else {
-            return UICollectionViewCell()
-        }
-        
-        switch model {
-        case .cell(let nowPlayingListCellModel):
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NowPlayingListCell.className, for: indexPath) as? NowPlayingListCell else {
-                return UICollectionViewCell()
-            }
-            cell.configureData(nowPlayingListCellModel)
-            return cell
-        }
-    }
-    
-}
-
-extension HomeViewController: HomeViewModelEvent {
-    
-    func reloadData() {
-        DispatchQueue.main.async { [weak self] in
-            self?.collectionView.reloadData()
-        }
     }
     
 }
