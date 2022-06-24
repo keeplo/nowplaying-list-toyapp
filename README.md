@@ -14,7 +14,7 @@
 |[develop](https://github.com/Keeplo/NowPlayingList/tree/develop)| 현재 버전 |
 |[study_develop](https://github.com/Keeplo/NowPlayingList/tree/study_develop)| 본 프로젝트 진행 (라이브러리X) |
 |[refactoring_MVVM](https://github.com/Keeplo/NowPlayingList/tree/refactoring_MVVM)| 개인학습 및 리펙토링 - MVVM 구조 변경 및 라이브러리 추가 |
-|[refactoring_Rx]()| 개인학습 및 리펙토링 - RxSwift 구조 변경|
+|[refactoring_RxSwift](https://github.com/keeplo/NowPlayingList/tree/refactoring_RxSwift)| 개인학습 및 리펙토링 - RxSwift 적용|
 
 ---
 
